@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="resources/shaders/default.frag">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/resources/shaders/default.frag</file>
+    <file alias="resources/shaders/default.vert">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/resources/shaders/default.vert</file>
+  </qresource>
+</RCC>
+

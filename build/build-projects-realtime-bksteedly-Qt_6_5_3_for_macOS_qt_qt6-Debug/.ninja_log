@@ -1,0 +1,28 @@
+# ninja log v6
+856	1386	1731968527970640532	CMakeFiles/projects_realtime.dir/src/shapes/cylinder.cpp.o	8131f88631a1c597
+57	142	1732137273259315517	projects_realtime	d0a6ddb9b0f2671f
+854	1820	1731968527968068196	CMakeFiles/projects_realtime.dir/src/parser/sceneparser.cpp.o	e812ed82019d783f
+1	59	1731968527164346734	StaticGLEW_autogen/mocs_compilation.cpp	7847bcb8fdd3e272
+1	59	1731968527164346734	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/StaticGLEW_autogen/timestamp	7847bcb8fdd3e272
+1	59	1731968527164346734	StaticGLEW_autogen/timestamp	7847bcb8fdd3e272
+59	96	1731968527173600908	CMakeFiles/StaticGLEW.dir/StaticGLEW_autogen/mocs_compilation.cpp.o	6455b7b1057e6f90
+8	38	1732136740811538895	projects_realtime_autogen/timestamp	c1c66a8d1015c8e4
+59	382	1731968527173853742	CMakeFiles/StaticGLEW.dir/glew/src/glew.c.o	c1772af5f4577290
+854	1980	1731968527968219613	CMakeFiles/projects_realtime.dir/src/parser/scenefilereader.cpp.o	a2aeffc3deeb64c9
+357	1226	1732136150666981789	CMakeFiles/projects_realtime.dir/src/mainwindow.cpp.o	7273d648d474cc1
+8	38	1732136740811538895	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/projects_realtime_autogen/timestamp	c1c66a8d1015c8e4
+8	24	1732137273225724990	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/.rcc/qrc_Resources.cpp	a79beb1f1a4e77a6
+853	1215	1731968527967846196	CMakeFiles/projects_realtime.dir/src/settings.cpp.o	b0514f18f6d92a82
+356	1149	1732136150666746456	CMakeFiles/projects_realtime.dir/src/main.cpp.o	e8ba3225da28c2c
+855	1396	1731968527969180156	CMakeFiles/projects_realtime.dir/src/shapes/cube.cpp.o	2ba3d936551048ba
+1	59	1731968527164346734	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/StaticGLEW_autogen/mocs_compilation.cpp	7847bcb8fdd3e272
+24	56	1732137273226731902	CMakeFiles/projects_realtime.dir/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/.rcc/qrc_Resources.cpp.o	31c4cb914b66a834
+357	739	1732136150667097288	CMakeFiles/projects_realtime.dir/src/camera/camera.cpp.o	627c9b7b17deaa3c
+426	833	1732044527283473505	CMakeFiles/projects_realtime.dir/src/shapes/sphere.cpp.o	c61c4040328b2be
+8	24	1732137273225724990	.rcc/qrc_Resources.cpp	a79beb1f1a4e77a6
+38	879	1732136740841744103	CMakeFiles/projects_realtime.dir/src/realtime.cpp.o	ea4a388d98493109
+8	38	1732136740811538895	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/projects-realtime-bksteedly/build/build-projects-realtime-bksteedly-Qt_6_5_3_for_macOS_qt_qt6-Debug/projects_realtime_autogen/mocs_compilation.cpp	c1c66a8d1015c8e4
+382	434	1731968527496505761	libStaticGLEW.a	1fe7d8d8719ca06c
+8	38	1732136740811538895	projects_realtime_autogen/mocs_compilation.cpp	c1c66a8d1015c8e4
+426	891	1732044527283599296	CMakeFiles/projects_realtime.dir/src/shapes/cone.cpp.o	f94a86aa647054fd
+356	1149	1732136150666542916	CMakeFiles/projects_realtime.dir/projects_realtime_autogen/mocs_compilation.cpp.o	fbf97c96eadc355a
