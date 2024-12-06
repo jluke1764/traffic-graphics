@@ -49,12 +49,18 @@ void SceneParser::debugDFS() {
     dfsPrintTree(root, sentence);
 }
 
-void SceneParser::dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm) {
+void SceneParser::dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm, Car* car) {
     if (node==nullptr) {
         return;
     }
 
     std::cout << node->name << std::endl;
+    if (node->name.find("truck") != std::string::npos and car == nullptr) {
+        Car temp = Car();
+        renderData.cars.push_back(temp);
+        car = &renderData.cars.back();
+        // car->setPosition(glm::vec3(renderData.cameraData.pos));
+    }
 
     glm::mat4 T(1.f);
     glm::mat4 S(1.f);
@@ -84,8 +90,14 @@ void SceneParser::dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm) {
         RenderShapeData shape_data;
         shape_data.primitive = *primitive;
         shape_data.ctm = ctm;
+        shape_data.carPtr = car;
         renderData.shapes.push_back(shape_data);
-        std::cout << int(shape_data.primitive.type) << std::endl;
+        // std::cout << int(shape_data.primitive.type) << std::endl;
+        if (node->name.find("body") != std::string::npos and car != nullptr) {
+            car->addBodyShape(&renderData.shapes.back());
+        } else if (node->name.find("wheel") != std::string::npos and car != nullptr) {
+            car->addWheelShape(&renderData.shapes.back());
+        }
     }
 
     for (SceneLight* light : node->lights) {
@@ -106,7 +118,7 @@ void SceneParser::dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm) {
     }
 
     for (SceneNode* child : node->children) {
-        dfs(child, renderData, ctm);
+        dfs(child, renderData, ctm, car);
     }
 }
 
@@ -129,12 +141,13 @@ bool SceneParser::parse(std::string filepath, RenderData &renderData) {
     //clear renderData.shapes
     renderData.shapes.clear();
     renderData.lights.clear();
+    renderData.cars.clear();
 
 
     //traverse the tree in a depth-first manner
-    dfs(root, renderData, glm::mat4(1.0f));
+    dfs(root, renderData, glm::mat4(1.0f), nullptr);
     // std::cout << renderData.shapes[0].ctm << std::endl;
-    std::cout << renderData.shapes.size() << std::endl;
+    // std::cout << renderData.shapes.size() << std::endl;
 
 
     return true;

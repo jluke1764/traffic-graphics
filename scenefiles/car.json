@@ -81,7 +81,7 @@
           ]
         },
         {
-          "name": "upper_cabin",
+          "name": "upper_body",
           "translate": [0.0, 1.0, 0.5],
           "scale": [1.5, 1.0, 1.5],
           "primitives": [

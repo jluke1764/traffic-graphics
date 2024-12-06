@@ -98,6 +98,5 @@ private:
 
     bool initialized = false;
 
-    Car m_car; // Add a Car member
-    float m_timeSinceLastFrame;
+    std::vector<Car> m_cars;
 };

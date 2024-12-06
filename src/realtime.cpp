@@ -325,11 +325,14 @@ void Realtime::updateLights() {
 }
 
 void Realtime::sceneChanged() {
+    m_cars.clear();
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
     Realtime::updateLights();
     glErrorCheck();
+
+    m_cars = m_metaData.cars;
 
     Camera camera(m_metaData.cameraData, size().width(), size().height());
 
@@ -437,6 +440,10 @@ void Realtime::timerEvent(QTimerEvent *event) {
     m_elapsedTimer.restart();
 
     // Use deltaTime and m_keyMap here to move around
+    for (auto& m_car: m_cars) {
+        m_car.update(deltaTime);
+        m_car.applyTransformsToShapes();
+    }
 
     //loop through all keys in the map and check whether they are true. Then if they are, add conditionals for what to do
     //change camera.pos and then update view matrix. maybe call an update view matrix function

@@ -3,11 +3,15 @@
 #include "scenedata.h"
 #include <vector>
 #include <string>
+#include "car/car.h"
 
 // Struct which contains data for a single primitive, to be used for rendering
 struct RenderShapeData {
     ScenePrimitive primitive;
     glm::mat4 ctm; // the cumulative transformation matrix
+    class Car *carPtr;
+
+    RenderShapeData() : carPtr(nullptr) {}
 };
 
 // Struct which contains all the data needed to render a scene
@@ -17,6 +21,7 @@ struct RenderData {
 
     std::vector<SceneLightData> lights;
     std::vector<RenderShapeData> shapes;
+    std::vector<Car> cars;
 };
 
 class SceneParser {
@@ -25,7 +30,7 @@ public:
     // @param filepath    The path of the scene file to load.
     // @param renderData  On return, this will contain the metadata of the loaded scene.
     // @return            A boolean value indicating whether the parse was successful.
-    static void dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm);
+    static void dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm, Car* car);
     static bool parse(std::string filepath, RenderData &renderData);
 
     static void debugDFS();
