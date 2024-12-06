@@ -296,9 +296,9 @@ void Realtime::updateLights() {
             glErrorCheck();
         } else if (lights[i].type == spot) {
             glErrorCheck();
-            std::cout << "angle: " << lights[i].angle << std::endl;
-            std::cout << "penumbra: " << lights[i].penumbra << std::endl;
-            std::cout << "function: " << lights[i].function[0] << std::endl;
+            // std::cout << "angle: " << lights[i].angle << std::endl;
+            // std::cout << "penumbra: " << lights[i].penumbra << std::endl;
+            // std::cout << "function: " << lights[i].function[0] << std::endl;
 
             std::string position = "lights[" + std::to_string(i) + "].position";
             glUniform4fv(glGetUniformLocation(m_shader, position.c_str()), 1, &lights[i].position[0]);
@@ -347,7 +347,7 @@ void Realtime::sceneChanged() {
     glErrorCheck();
 
     glUniform4fv(glGetUniformLocation(m_shader,"cameraPosition"),1,&(camera.getPos()[0]));
-    printVector("camera position", camera.getPos());
+    // printVector("camera position", camera.getPos());
 
     glUseProgram(0);
     glErrorCheck();

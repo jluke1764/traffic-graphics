@@ -45,6 +45,7 @@ add_executable(${PROJECT_NAME}
     src/parser/scenedata.h
     src/parser/scenefilereader.h src/parser/scenefilereader.cpp
     src/camera/camera.h src/camera/camera.cpp
+    src/car/car.h src/car/car.cpp
     src/shapes/sphere.h src/shapes/sphere.cpp
     src/shaderloader.h
     src/debug.h
@@ -58,7 +59,8 @@ add_executable(${PROJECT_NAME}
 add_subdirectory(glm)
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`
-add_library(StaticGLEW STATIC glew/src/glew.c)
+add_library(StaticGLEW STATIC glew/src/glew.c
+    src/car/car.h src/car/car.cpp)
 include_directories(${PROJECT_NAME} PRIVATE glew/include)
 
 # Specifies libraries to be linked (Qt components, glew, etc)

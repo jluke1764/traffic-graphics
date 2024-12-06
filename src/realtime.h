@@ -17,6 +17,7 @@
 #include "shapes/cone.h"
 #include "shapes/sphere.h"
 #include "shapes/cylinder.h"
+#include "car/car.h"
 
 
 class Realtime : public QOpenGLWidget
@@ -96,4 +97,7 @@ private:
     float  m_zoom;
 
     bool initialized = false;
+
+    Car m_car; // Add a Car member
+    float m_timeSinceLastFrame;
 };
