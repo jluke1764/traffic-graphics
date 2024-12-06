@@ -1,3 +1,3 @@
-# Projects 5 & 6: Lights, Camera & Action!
+# Traffic Graphics!
 
-All project handouts can be found [here](https://cs1230.graphics/projects).
+This is our final project!
