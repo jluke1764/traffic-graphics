@@ -771,6 +771,7 @@ bool ScenefileReader::parseGroups(const QJsonValue &groups, SceneNode *parent) {
             return false;
         }
 
+        std::string groupName = "";
         QJsonObject groupData = group.toObject();
         if (groupData.contains("name")) {
             if (!groupData["name"].isString()) {
@@ -779,7 +780,8 @@ bool ScenefileReader::parseGroups(const QJsonValue &groups, SceneNode *parent) {
             }
 
             // if its a reference to a template group append it
-            std::string groupName = groupData["name"].toString().toStdString();
+            groupName = groupData["name"].toString().toStdString();
+            // parent->name = groupName;
             if (m_templates.contains(groupName)) {
                 parent->children.push_back(m_templates[groupName]);
                 continue;
@@ -787,6 +789,7 @@ bool ScenefileReader::parseGroups(const QJsonValue &groups, SceneNode *parent) {
         }
 
         SceneNode *node = new SceneNode;
+        node->name = groupName;
         m_nodes.push_back(node);
         parent->children.push_back(node);
 

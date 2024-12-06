@@ -242,6 +242,8 @@ projects_realtime_autogen/timestamp: \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/glm/vector_relational.hpp \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/camera/camera.cpp \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/camera/camera.h \
+	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/car/car.cpp \
+	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/car/car.h \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/debug.h \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/main.cpp \
 	/Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/mainwindow.cpp \

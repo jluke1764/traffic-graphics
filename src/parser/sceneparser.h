@@ -29,4 +29,5 @@ public:
     static bool parse(std::string filepath, RenderData &renderData);
 
     static void debugDFS();
+    static SceneNode* findNodeByName(SceneNode* root, const std::string &name);
 };

@@ -54,6 +54,8 @@ void SceneParser::dfs(SceneNode* node, RenderData &renderData, glm::mat4 ctm) {
         return;
     }
 
+    std::cout << node->name << std::endl;
+
     glm::mat4 T(1.f);
     glm::mat4 S(1.f);
     glm::mat4 R(1.f);
@@ -136,4 +138,20 @@ bool SceneParser::parse(std::string filepath, RenderData &renderData) {
 
 
     return true;
+}
+
+SceneNode* SceneParser::findNodeByName(SceneNode* root, const std::string &name) {
+    if (!root) return nullptr;
+    std::stack<SceneNode*> s;
+    s.push(root);
+    while(!s.empty()) {
+        SceneNode* node = s.top(); s.pop();
+        if (node->name == name) {
+            return node;
+        }
+        for (auto *child : node->children) {
+            s.push(child);
+        }
+    }
+    return nullptr;
 }

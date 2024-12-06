@@ -235,6 +235,7 @@
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/glm/vec3.hpp \
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/glm/vec4.hpp \
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/glm/vector_relational.hpp \
+  /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/car/car.h \
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/parser/scenedata.h \
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/parser/sceneparser.h \
   /Users/jasonni/Desktop/CS1230_Graphics/traffic-graphics/src/realtime.h \
