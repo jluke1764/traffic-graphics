@@ -247,6 +247,8 @@ traffic-graphics_autogen/timestamp: \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/settings.cpp \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/settings.h \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shaderloader.h \
+	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.cpp \
+	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.h \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.cpp \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.h \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cube.cpp \
@@ -255,6 +257,8 @@ traffic-graphics_autogen/timestamp: \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cylinder.h \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/sphere.cpp \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/sphere.h \
+	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/trafficscene.cpp \
+	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/trafficscene.h \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/utils/aspectratiowidget/aspectratiowidget.hpp \
 	/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/utils/shaderloader.h \
 	/Users/jackieluke/Qt/6.5.3/macos/lib/QtCore.framework/Versions/A/Headers/QElapsedTimer \

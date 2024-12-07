@@ -229,10 +229,12 @@
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/parser/scenedata.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/parser/sceneparser.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/realtime.h \
+  /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cube.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cylinder.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/sphere.h \
+  /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/trafficscene.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/utils/aspectratiowidget/aspectratiowidget.hpp \
   /Users/jackieluke/Qt/6.5.3/macos/lib/QtCore.framework/Versions/A/Headers/QElapsedTimer \
   /Users/jackieluke/Qt/6.5.3/macos/lib/QtCore.framework/Versions/A/Headers/QTime \

@@ -49,7 +49,7 @@
 						0,
 						1
 					],
-					"name" : "projects_realtime",
+					"name" : "traffic-graphics",
 					"targetIndexes" : 
 					[
 						0,
@@ -67,7 +67,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "StaticGLEW::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-StaticGLEW-Debug-7502f9cbd9eb162bd5fe.json",
+					"jsonFile" : "target-StaticGLEW-Debug-21cbad1c16a8fa040213.json",
 					"name" : "StaticGLEW",
 					"projectIndex" : 0
 				},
@@ -87,30 +87,30 @@
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "projects_realtime::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-projects_realtime-Debug-f62b7599165e24276141.json",
-					"name" : "projects_realtime",
+					"id" : "traffic-graphics::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-traffic-graphics-Debug-d023b0a7c86671ed3ea0.json",
+					"name" : "traffic-graphics",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "projects_realtime_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-projects_realtime_autogen-Debug-fbf93be94a8a147ccdb1.json",
-					"name" : "projects_realtime_autogen",
+					"id" : "traffic-graphics_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-traffic-graphics_autogen-Debug-fa88bd45a80013e4b61d.json",
+					"name" : "traffic-graphics_autogen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "projects_realtime_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-projects_realtime_autogen_timestamp_deps-Debug-03ae91073baa66f43c00.json",
-					"name" : "projects_realtime_autogen_timestamp_deps",
+					"id" : "traffic-graphics_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-traffic-graphics_autogen_timestamp_deps-Debug-276c0be16edfba1aeb7e.json",
+					"name" : "traffic-graphics_autogen_timestamp_deps",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "projects_realtime_other_files::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-projects_realtime_other_files-Debug-a430d2170f8e6b77078f.json",
-					"name" : "projects_realtime_other_files",
+					"id" : "traffic-graphics_other_files::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-traffic-graphics_other_files-Debug-6f9b363e065bcbdbd92e.json",
+					"name" : "traffic-graphics_other_files",
 					"projectIndex" : 0
 				}
 			]

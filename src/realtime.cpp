@@ -154,6 +154,9 @@ void Realtime::initializeGL() {
     }
 
     initialized = true;
+
+    m_trafficScene = TrafficScene();
+    std::cout << "num car shapes: " << m_trafficScene.getShapes().size() << std::endl;
 }
 
 void Realtime::paintGL() {
@@ -178,6 +181,60 @@ void Realtime::paintGL() {
     for (int i=0; i<num_shapes; ++i){
 
         RenderShapeData &shape = m_metaData.shapes[i];
+
+        glm::mat4 model = shape.ctm;
+
+        glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_matrix"), 1, GL_FALSE, &shape.ctm[0][0]);
+        glErrorCheck();
+
+        glm::mat3 it_model_matrix = glm::mat3(glm::inverse(glm::transpose(model)));
+
+        glUniformMatrix3fv(glGetUniformLocation(m_shader, "it_model_matrix"), 1, GL_FALSE, &it_model_matrix[0][0]);
+        glErrorCheck();
+
+
+        glUniform4fv(glGetUniformLocation(m_shader,"O_a"),1, &shape.primitive.material.cAmbient[0]);
+        glErrorCheck();
+        glUniform4fv(glGetUniformLocation(m_shader,"O_d"),1, &shape.primitive.material.cDiffuse[0]);
+        glErrorCheck();
+        glUniform4fv(glGetUniformLocation(m_shader,"O_s"),1, &shape.primitive.material.cSpecular[0]);
+        glErrorCheck();
+
+        glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
+        glErrorCheck();
+
+        int shapeIndex = m_sphereIndex;
+        if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
+            shapeIndex = m_sphereIndex;
+        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CUBE) {
+            shapeIndex = m_cubeIndex;
+        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CYLINDER) {
+            shapeIndex = m_cylinderIndex;
+        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
+            shapeIndex = m_coneIndex;
+        }
+
+        // Bind the vbo and vao
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
+        glErrorCheck();
+
+        glBindVertexArray(m_vaos[shapeIndex]);
+        glErrorCheck();
+
+        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
+        glErrorCheck();
+
+        // Clean-up bindings
+        glBindVertexArray(0);
+        glErrorCheck();
+
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        glErrorCheck();
+    }
+
+    for (int i=0; i<m_trafficScene.getShapes().size(); ++i){
+
+        RenderShapeData &shape = m_trafficScene.getShapes()[i];
 
         glm::mat4 model = shape.ctm;
 
@@ -373,25 +430,26 @@ void Realtime::keyPressEvent(QKeyEvent *event) {
     // Update map
     m_keyMap[Qt::Key(event->key())] = true;
     // // Call corresponding function
-    // Camera camera(m_metaData.cameraData, size().width(), size().height());
-    // glm::vec4 currentPosition = camera.getPos();
-    // glm::vec4 lookVector = camera.getLook();
-    // if (event->key() == Qt::Key_W) {
-    //     float speed = 5.f;
-    //     glm::vec4 movement = lookVector * speed * deltaTime;
-    //     glm::vec4 newPosition = currentPosition + movement;
-    //     camera.setPos(newPosition);
-    // } else if (event->key() == Qt::Key_S) {
+    Camera camera(m_metaData.cameraData, size().width(), size().height());
+    glm::vec4 currentPosition = camera.getPos();
+    glm::vec4 lookVector = camera.getLook();
+    if (event->key() == Qt::Key_W) {
+        // float speed = 5.f;
+        // glm::vec4 movement = lookVector * speed * deltaTime;
+        // glm::vec4 newPosition = currentPosition + movement;
+        // camera.setPos(newPosition);
+    } else if (event->key() == Qt::Key_S) {
 
-    // } else if (event->key() == Qt::Key_A) {
+    } else if (event->key() == Qt::Key_A) {
 
-    // } else if (event->key() == Qt::Key_D) {
+    } else if (event->key() == Qt::Key_D) {
 
-    // } else if (event->key() == Qt::Key_Space) {
+    } else if (event->key() == Qt::Key_Space) {
+        m_tickCount++;
+        m_trafficScene.update(m_tickCount);
+    } else if (event->key() == Qt::Key_Control) {
 
-    // } else if (event->key() == Qt::Key_Control) {
-
-    // }
+    }
 }
 
 void Realtime::keyReleaseEvent(QKeyEvent *event) {
@@ -442,6 +500,10 @@ void Realtime::timerEvent(QTimerEvent *event) {
     //change camera.pos and then update view matrix. maybe call an update view matrix function
     //global camera
 
+
+    //update car movement
+    // m_trafficScene.update(m_timer);
+    // m_tickCount++;
     update(); // asks for a PaintGL() call to occur
 
 }

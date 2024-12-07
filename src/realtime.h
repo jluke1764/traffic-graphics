@@ -1,6 +1,7 @@
 #pragma once
 
 // Defined before including GLEW to suppress deprecation messages on macOS
+#include "trafficscene.h"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif
@@ -64,6 +65,7 @@ private:
     // Tick Related Variables
     int m_timer;                                        // Stores timer which attempts to run ~60 times per second
     QElapsedTimer m_elapsedTimer;                       // Stores timer which keeps track of actual time between frames
+    int m_tickCount = 0;
 
     // Input Related Variables
     bool m_mouseDown = false;                           // Stores state of left mouse button
@@ -74,6 +76,8 @@ private:
     double m_devicePixelRatio;
 
     RenderData m_metaData;
+    TrafficScene m_trafficScene;
+
     GLuint m_shader;     // Stores id of shader program
     std::vector<GLuint> m_vaos; // Stores id of vao
     std::vector<GLuint> m_vbos;

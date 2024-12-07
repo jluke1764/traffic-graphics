@@ -478,6 +478,12 @@
 			null
 		],
 		[
+			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.h",
+			"MU",
+			"2S5AI7NIVA/moc_car.cpp",
+			null
+		],
+		[
 			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.h",
 			"MU",
 			"2S5AI7NIVA/moc_cone.cpp",
@@ -499,6 +505,12 @@
 			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/sphere.h",
 			"MU",
 			"2S5AI7NIVA/moc_sphere.cpp",
+			null
+		],
+		[
+			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/trafficscene.h",
+			"MU",
+			"UVLADIE3JM/moc_trafficscene.cpp",
 			null
 		],
 		[
@@ -629,6 +641,11 @@
 			null
 		],
 		[
+			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.cpp",
+			"MU",
+			null
+		],
+		[
 			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.cpp",
 			"MU",
 			null
@@ -645,6 +662,11 @@
 		],
 		[
 			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/sphere.cpp",
+			"MU",
+			null
+		],
+		[
+			"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/trafficscene.cpp",
 			"MU",
 			null
 		]

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Sets project name
-project(projects_realtime LANGUAGES CXX C)
+project(traffic-graphics LANGUAGES CXX C)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -51,6 +51,9 @@ add_executable(${PROJECT_NAME}
     src/shapes/cube.h src/shapes/cube.cpp
     src/shapes/cylinder.h src/shapes/cylinder.cpp
     src/shapes/cone.h src/shapes/cone.cpp
+    src/shapes/car.h src/shapes/car.cpp
+    src/trafficscene.h src/trafficscene.cpp
+
 
 )
 

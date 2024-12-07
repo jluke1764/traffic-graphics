@@ -438,7 +438,7 @@
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug",
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics",
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src",
-		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/projects_realtime",
+		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/traffic-graphics",
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/PRIVATE",
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/glew/include",
 		"/usr/include",
@@ -468,7 +468,7 @@
 	"MOC_SKIP" : 
 	[
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/.rcc/qrc_Resources.cpp",
-		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/projects_realtime_autogen/mocs_compilation.cpp"
+		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/traffic-graphics_autogen/mocs_compilation.cpp"
 	],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 10,
@@ -491,7 +491,7 @@
 	"UIC_SKIP" : 
 	[
 		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/.rcc/qrc_Resources.cpp",
-		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/projects_realtime_autogen/mocs_compilation.cpp"
+		"/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/traffic-graphics_autogen/mocs_compilation.cpp"
 	],
 	"UIC_UI_FILES" : [],
 	"USE_BETTER_GRAPH" : false,
