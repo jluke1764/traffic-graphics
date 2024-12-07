@@ -23,6 +23,8 @@ private:
     void connectParam2();
     void connectNear();
     void connectFar();
+    void connectSun();
+    void connectTraffic();
     void connectPerPixelFilter();
     void connectKernelBasedFilter();
     void connectUploadFile();
@@ -43,6 +45,10 @@ private:
     QSlider *farSlider;
     QDoubleSpinBox *nearBox;
     QDoubleSpinBox *farBox;
+    QSlider *sunSlider;
+    QSlider *trafficSlider;
+    QDoubleSpinBox *sunBox;
+    QDoubleSpinBox *trafficBox;
 
     // Extra Credit:
     QCheckBox *ec1;
@@ -61,6 +67,11 @@ private slots:
     void onValChangeFarSlider(int newValue);
     void onValChangeNearBox(double newValue);
     void onValChangeFarBox(double newValue);
+
+    void onValChangeSunSlider(int newValue);
+    void onValChangeTrafficSlider(int newValue);
+    void onValChangeSunBox(double newValue);
+    void onValChangeTrafficBox(double newValue);
 
     // Extra Credit:
     void onExtraCredit1();

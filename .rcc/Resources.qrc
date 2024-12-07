@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="resources/shaders/default.frag">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/resources/shaders/default.frag</file>
+    <file alias="resources/shaders/default.vert">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/resources/shaders/default.vert</file>
+    <file alias="resources/shaders/texture.frag">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/resources/shaders/texture.frag</file>
+    <file alias="resources/shaders/texture.vert">/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/resources/shaders/texture.vert</file>
+  </qresource>
+</RCC>
+
