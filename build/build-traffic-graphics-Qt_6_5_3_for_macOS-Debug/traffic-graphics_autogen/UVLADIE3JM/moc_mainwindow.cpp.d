@@ -226,9 +226,11 @@
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/glm/vec3.hpp \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/glm/vec4.hpp \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/glm/vector_relational.hpp \
+  /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/camera/camera.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/parser/scenedata.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/parser/sceneparser.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/realtime.h \
+  /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/settings.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/car.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cone.h \
   /Users/jackieluke/Documents/Grad/graphics/traffic-graphics/src/shapes/cube.h \

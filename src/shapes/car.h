@@ -34,10 +34,12 @@ public:
 
 
 private:
-    glm::vec3 m_position = glm::vec3(1.0);
+    glm::vec3 m_position = glm::vec3(0.0);
+    glm::vec3 m_prev_position = glm::vec3(0.0);
     float m_angleFacing = 0.0;
+    float m_prev_angleFacing = 0.0;
 
-    glm::mat4 m_ctm;
+    // glm::mat4 m_ctm;
     // RenderShapeData m_wheel;
     RenderShapeData m_body;
 

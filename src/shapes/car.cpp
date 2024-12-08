@@ -28,7 +28,7 @@ Car::Car() {
                              .ctm = bodyCTM};
 
     m_position = glm::vec3(0.0);
-    m_ctm = glm::translate(glm::rotate(glm::mat4(1.0), glm::radians(m_angleFacing), glm::vec3(0, 1, 0)), m_position);
+    // m_ctm = glm::translate(glm::rotate(glm::mat4(1.0), glm::radians(m_angleFacing), glm::vec3(0, 1, 0)), m_position);
 
 }
 
@@ -37,10 +37,12 @@ std::vector<RenderShapeData> Car::getShapeData() {
     ret.clear();
     //world space
 
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0), glm::radians(m_angleFacing), glm::vec3(0, 1, 0));
+    glm::mat4 translation = glm::translate(glm::mat4(1.0), m_position);
 
-    m_body.ctm = m_ctm*m_body.ctm;
+    // printMatrix4x4(m_body.ctm);
 
-    ret.push_back(m_body);
+    ret.push_back(RenderShapeData{.primitive = m_body.primitive, .ctm = translation*rotation*m_body.ctm});
 
     return ret;
 }
@@ -54,8 +56,7 @@ void Car::goForward() {
 
     glm::vec3 dir = glm::vec3(cos(glm::radians(m_angleFacing)), 0, sin(glm::radians(m_angleFacing)));
     dir = glm::normalize(dir);
-    m_ctm = glm::translate(m_ctm, m_velocity*dir);
-    m_position = glm::vec3(m_ctm*glm::vec4(m_position, 0));
+    m_position = m_position + m_velocity*dir;
 
     printPosition();
 
@@ -67,14 +68,11 @@ void Car::goForward() {
 
 void Car::turnRight() {
     m_angleFacing += -90;
-    m_ctm = glm::rotate(m_ctm, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 }
 
 void Car::printPosition() {
     std::cout << "pos: " << m_position.x << ", " << m_position.y << ", " << m_position.z << std::endl;
     std::cout << "angleFacing: " << m_angleFacing << std::endl;
-
-    printMatrix4x4(m_body.ctm);
 
 }
 

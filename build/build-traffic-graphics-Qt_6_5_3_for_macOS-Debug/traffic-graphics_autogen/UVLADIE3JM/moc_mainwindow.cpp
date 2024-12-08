@@ -51,6 +51,10 @@ static constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers:
     "onValChangeFarSlider",
     "onValChangeNearBox",
     "onValChangeFarBox",
+    "onValChangeSunSlider",
+    "onValChangeTrafficSlider",
+    "onValChangeSunBox",
+    "onValChangeTrafficBox",
     "onExtraCredit1",
     "onExtraCredit2",
     "onExtraCredit3",
@@ -58,7 +62,7 @@ static constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers:
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
-    uint offsetsAndSizes[34];
+    uint offsetsAndSizes[42];
     char stringdata0[11];
     char stringdata1[17];
     char stringdata2[1];
@@ -72,10 +76,14 @@ struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
     char stringdata10[21];
     char stringdata11[19];
     char stringdata12[18];
-    char stringdata13[15];
-    char stringdata14[15];
-    char stringdata15[15];
-    char stringdata16[15];
+    char stringdata13[21];
+    char stringdata14[25];
+    char stringdata15[18];
+    char stringdata16[22];
+    char stringdata17[15];
+    char stringdata18[15];
+    char stringdata19[15];
+    char stringdata20[15];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSMainWindowENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -94,10 +102,14 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
         QT_MOC_LITERAL(133, 20),  // "onValChangeFarSlider"
         QT_MOC_LITERAL(154, 18),  // "onValChangeNearBox"
         QT_MOC_LITERAL(173, 17),  // "onValChangeFarBox"
-        QT_MOC_LITERAL(191, 14),  // "onExtraCredit1"
-        QT_MOC_LITERAL(206, 14),  // "onExtraCredit2"
-        QT_MOC_LITERAL(221, 14),  // "onExtraCredit3"
-        QT_MOC_LITERAL(236, 14)   // "onExtraCredit4"
+        QT_MOC_LITERAL(191, 20),  // "onValChangeSunSlider"
+        QT_MOC_LITERAL(212, 24),  // "onValChangeTrafficSlider"
+        QT_MOC_LITERAL(237, 17),  // "onValChangeSunBox"
+        QT_MOC_LITERAL(255, 21),  // "onValChangeTrafficBox"
+        QT_MOC_LITERAL(277, 14),  // "onExtraCredit1"
+        QT_MOC_LITERAL(292, 14),  // "onExtraCredit2"
+        QT_MOC_LITERAL(307, 14),  // "onExtraCredit3"
+        QT_MOC_LITERAL(322, 14)   // "onExtraCredit4"
     },
     "MainWindow",
     "onPerPixelFilter",
@@ -112,6 +124,10 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
     "onValChangeFarSlider",
     "onValChangeNearBox",
     "onValChangeFarBox",
+    "onValChangeSunSlider",
+    "onValChangeTrafficSlider",
+    "onValChangeSunBox",
+    "onValChangeTrafficBox",
     "onExtraCredit1",
     "onExtraCredit2",
     "onExtraCredit3",
@@ -127,7 +143,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       11,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -135,20 +151,24 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   98,    2, 0x08,    1 /* Private */,
-       3,    0,   99,    2, 0x08,    2 /* Private */,
-       4,    0,  100,    2, 0x08,    3 /* Private */,
-       5,    0,  101,    2, 0x08,    4 /* Private */,
-       6,    1,  102,    2, 0x08,    5 /* Private */,
-       8,    1,  105,    2, 0x08,    7 /* Private */,
-       9,    1,  108,    2, 0x08,    9 /* Private */,
-      10,    1,  111,    2, 0x08,   11 /* Private */,
-      11,    1,  114,    2, 0x08,   13 /* Private */,
-      12,    1,  117,    2, 0x08,   15 /* Private */,
-      13,    0,  120,    2, 0x08,   17 /* Private */,
-      14,    0,  121,    2, 0x08,   18 /* Private */,
-      15,    0,  122,    2, 0x08,   19 /* Private */,
-      16,    0,  123,    2, 0x08,   20 /* Private */,
+       1,    0,  122,    2, 0x08,    1 /* Private */,
+       3,    0,  123,    2, 0x08,    2 /* Private */,
+       4,    0,  124,    2, 0x08,    3 /* Private */,
+       5,    0,  125,    2, 0x08,    4 /* Private */,
+       6,    1,  126,    2, 0x08,    5 /* Private */,
+       8,    1,  129,    2, 0x08,    7 /* Private */,
+       9,    1,  132,    2, 0x08,    9 /* Private */,
+      10,    1,  135,    2, 0x08,   11 /* Private */,
+      11,    1,  138,    2, 0x08,   13 /* Private */,
+      12,    1,  141,    2, 0x08,   15 /* Private */,
+      13,    1,  144,    2, 0x08,   17 /* Private */,
+      14,    1,  147,    2, 0x08,   19 /* Private */,
+      15,    1,  150,    2, 0x08,   21 /* Private */,
+      16,    1,  153,    2, 0x08,   23 /* Private */,
+      17,    0,  156,    2, 0x08,   25 /* Private */,
+      18,    0,  157,    2, 0x08,   26 /* Private */,
+      19,    0,  158,    2, 0x08,   27 /* Private */,
+      20,    0,  159,    2, 0x08,   28 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -157,6 +177,10 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    7,
     QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void, QMetaType::Double,    7,
+    QMetaType::Void, QMetaType::Double,    7,
     QMetaType::Void, QMetaType::Int,    7,
     QMetaType::Void, QMetaType::Int,    7,
     QMetaType::Void, QMetaType::Double,    7,
@@ -204,6 +228,18 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'onValChangeFarBox'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<double, std::false_type>,
+        // method 'onValChangeSunSlider'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'onValChangeTrafficSlider'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'onValChangeSunBox'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<double, std::false_type>,
+        // method 'onValChangeTrafficBox'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<double, std::false_type>,
         // method 'onExtraCredit1'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onExtraCredit2'
@@ -232,10 +268,14 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 7: _t->onValChangeFarSlider((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 8: _t->onValChangeNearBox((*reinterpret_cast< std::add_pointer_t<double>>(_a[1]))); break;
         case 9: _t->onValChangeFarBox((*reinterpret_cast< std::add_pointer_t<double>>(_a[1]))); break;
-        case 10: _t->onExtraCredit1(); break;
-        case 11: _t->onExtraCredit2(); break;
-        case 12: _t->onExtraCredit3(); break;
-        case 13: _t->onExtraCredit4(); break;
+        case 10: _t->onValChangeSunSlider((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 11: _t->onValChangeTrafficSlider((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 12: _t->onValChangeSunBox((*reinterpret_cast< std::add_pointer_t<double>>(_a[1]))); break;
+        case 13: _t->onValChangeTrafficBox((*reinterpret_cast< std::add_pointer_t<double>>(_a[1]))); break;
+        case 14: _t->onExtraCredit1(); break;
+        case 15: _t->onExtraCredit2(); break;
+        case 16: _t->onExtraCredit3(); break;
+        case 17: _t->onExtraCredit4(); break;
         default: ;
         }
     }
@@ -260,13 +300,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 18)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 14;
+        _id -= 18;
     }
     return _id;
 }

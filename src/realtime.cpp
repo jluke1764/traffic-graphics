@@ -244,16 +244,13 @@ void Realtime::initializeGeometry() {
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glErrorCheck();
     }
-<<<<<<< HEAD
 
     initialized = true;
 
     m_trafficScene = TrafficScene();
     std::cout << "num car shapes: " << m_trafficScene.getShapes().size() << std::endl;
-=======
     // makeFBO();
     // initialized = true;
->>>>>>> main
 }
 
 void Realtime::makeFBO(){
@@ -676,7 +673,6 @@ void Realtime::settingsChanged() {
 
 void Realtime::keyPressEvent(QKeyEvent *event) {
     m_keyMap[Qt::Key(event->key())] = true;
-<<<<<<< HEAD
     // // Call corresponding function
     Camera camera(m_metaData.cameraData, size().width(), size().height());
     glm::vec4 currentPosition = camera.getPos();
@@ -698,8 +694,7 @@ void Realtime::keyPressEvent(QKeyEvent *event) {
     } else if (event->key() == Qt::Key_Control) {
 
     }
-=======
->>>>>>> main
+
 }
 
 void Realtime::keyReleaseEvent(QKeyEvent *event) {
@@ -794,8 +789,9 @@ void Realtime::timerEvent(QTimerEvent *event) {
 
 
     //update car movement
-    // m_trafficScene.update(m_timer);
-    // m_tickCount++;
+    m_trafficScene.update(m_tickCount);
+    m_tickCount++;
+
     if (m_keyMap[Qt::Key_W]) {
         m_metaData.cameraData.pos += glm::normalize(m_metaData.cameraData.look)*(5.f*deltaTime);
         updateViewMatrix();
