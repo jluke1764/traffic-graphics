@@ -4,7 +4,6 @@
 #include "trafficscene.h"
 #include "camera/camera.h"
 #include "settings.h"
->>>>>>> main
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif

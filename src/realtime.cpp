@@ -792,12 +792,10 @@ void Realtime::timerEvent(QTimerEvent *event) {
     //change camera.pos and then update view matrix. maybe call an update view matrix function
     //global camera
 
-<<<<<<< HEAD
 
     //update car movement
     // m_trafficScene.update(m_timer);
     // m_tickCount++;
-=======
     if (m_keyMap[Qt::Key_W]) {
         m_metaData.cameraData.pos += glm::normalize(m_metaData.cameraData.look)*(5.f*deltaTime);
         updateViewMatrix();
@@ -823,7 +821,6 @@ void Realtime::timerEvent(QTimerEvent *event) {
         updateViewMatrix();
     }
 
->>>>>>> main
     update(); // asks for a PaintGL() call to occur
 
 }
