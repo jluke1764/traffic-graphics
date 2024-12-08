@@ -209,7 +209,7 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 CMAKE_PROJECT_INCLUDE_BEFORE:FILEPATH=/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/build/build-traffic-graphics-Qt_6_5_3_for_macOS-Debug/.qtc/package-manager/auto-setup.cmake
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=projects_realtime
+CMAKE_PROJECT_NAME:STATIC=traffic-graphics
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib

@@ -2,6 +2,9 @@
 
 // Defined before including GLEW to suppress deprecation messages on macOS
 #include "trafficscene.h"
+#include "camera/camera.h"
+#include "settings.h"
+>>>>>>> main
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif
@@ -34,7 +37,11 @@ public slots:
 
 protected:
     void initializeGL() override;                       // Called once at the start of the program
-    void paintGL() override;                            // Called whenever the OpenGL context changes or by an update() request
+    void initializeGeometry();
+    void makeFBO();
+    void paintGeometry();
+    void paintTexture(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
+    void paintGL() override;          // Called whenever the OpenGL context changes or by an update() request
     void resizeGL(int width, int height) override;      // Called when window size changes
 
 private:
@@ -42,7 +49,11 @@ private:
     void keyReleaseEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+
+    void rotateView(glm::vec3 axis, float theta);
+
     void mouseMoveEvent(QMouseEvent *event) override;
+    void updateViewMatrix();
     void timerEvent(QTimerEvent *event) override;
 
     void updateVBOS();
@@ -77,10 +88,23 @@ private:
 
     RenderData m_metaData;
     TrafficScene m_trafficScene;
-
+    GLuint m_texture_shader;
     GLuint m_shader;     // Stores id of shader program
     std::vector<GLuint> m_vaos; // Stores id of vao
     std::vector<GLuint> m_vbos;
+
+    GLuint m_fbo_texture;
+    GLuint m_fbo_renderbuffer;
+    GLuint m_fbo;
+    GLuint m_defaultFBO;
+    int m_fbo_width;
+    int m_fbo_height;
+
+    int m_screen_width;
+    int m_screen_height;
+
+    GLuint m_fullscreen_vbo;
+    GLuint m_fullscreen_vao;
 
     std::vector<std::vector<float>> shapeData;
 
@@ -100,4 +124,9 @@ private:
     float  m_zoom;
 
     bool initialized = false;
+
+    float param1 = settings.shapeParameter1;
+    float param2 = settings.shapeParameter2;
+    float near = settings.nearPlane;
+    float far = settings.farPlane;
 };
