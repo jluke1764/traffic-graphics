@@ -47,6 +47,7 @@ private:
     void updateVBOS();
     void tesselateShapes();
     void updateLights();
+    void tileCity();
 
     struct Light {
         int type;
