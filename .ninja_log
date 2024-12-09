@@ -1,0 +1,8 @@
+# ninja log v6
+1	72	1733541779942583023	StaticGLEW_autogen/timestamp	b343bff6088dfc6f
+1	72	1733541779942583023	StaticGLEW_autogen/mocs_compilation.cpp	b343bff6088dfc6f
+1	72	1733541779942583023	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/StaticGLEW_autogen/timestamp	b343bff6088dfc6f
+1	72	1733541779942583023	/Users/bellasteedly/Library/Mobile Documents/com~apple~CloudDocs/Brown/computerGraphics/traffic-graphics/StaticGLEW_autogen/mocs_compilation.cpp	b343bff6088dfc6f
+73	106	1733541779953878910	CMakeFiles/StaticGLEW.dir/StaticGLEW_autogen/mocs_compilation.cpp.o	20e76c2fd7a096ec
+73	22528	1733541779954136075	CMakeFiles/StaticGLEW.dir/glew/src/glew.c.o	594b2d22ab0b25f3
+22529	22559	1733541802409375812	libStaticGLEW.a	1fe7d8d8719ca06c
