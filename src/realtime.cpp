@@ -300,8 +300,8 @@ void Realtime::paintGeometry() {
 
     // Students: anything requiring OpenGL calls every frame should be done here
     // Clear screen color and depth before painting
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // glErrorCheck();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glErrorCheck();
 
     // Task 2: activate the shader program by calling glUseProgram with `m_shader`
     glUseProgram(m_shader);
@@ -563,12 +563,58 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
+void Realtime::loadTextures() {
+    int num_shapes = m_metaData.shapes.size();
+
+    for (int i=0; i<num_shapes; ++i){
+
+        RenderShapeData &shape = m_metaData.shapes[i];
+        if (shape.primitive.material.textureMap.isUsed) {
+
+            // Prepare filepath
+            QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+
+            // Task 1: Obtain image from filepath
+            QImage image = QImage(texture_filepath);
+
+            // Task 2: Format image to fit OpenGL
+            image = image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+            // GLuint textureId;
+            glGenTextures(1, &m_fbo_texture);
+
+            // Task 9: Set the active texture slot to texture slot 0
+            glActiveTexture(GL_TEXTURE0);
+
+            // Task 4: Bind kitten texture
+            glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
+
+            // Task 5: Load image into kitten texture
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+
+            // Task 6: Set min and mag filters' interpolation mode to linear
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            // Task 7: Unbind kitten texture
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            glUseProgram(m_texture_shader);
+            glUniform1i(glGetUniformLocation(m_texture_shader, "tex"), 0);
+            glUseProgram(0);
+
+            // shape.primitive.material.textureMap.textureId = textureId;
+        }
+    }
+}
+
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
     Realtime::updateLights();
     glErrorCheck();
+    Realtime::loadTextures();
 
     Camera camera(m_metaData.cameraData, size().width(), size().height());
 
