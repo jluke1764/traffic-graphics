@@ -37,7 +37,7 @@ std::vector<RenderShapeData> Car::getShapeData() {
     ret.clear();
     //world space
 
-    glm::mat4 rotation = glm::rotate(glm::mat4(1.0), glm::radians(m_angleFacing), glm::vec3(0, 1, 0));
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0), m_angleFacing, glm::vec3(0, 1, 0));
     glm::mat4 translation = glm::translate(glm::mat4(1.0), m_position);
 
     // printMatrix4x4(m_body.ctm);
@@ -48,20 +48,17 @@ std::vector<RenderShapeData> Car::getShapeData() {
 }
 
 void Car::setVelocity(float v) {
-    m_velocity = v;
+    m_speed = v;
 }
 
 void Car::goForward() {
     std::cout << "go forward" << std::endl;
 
-    glm::vec3 dir = glm::vec3(cos(glm::radians(m_angleFacing)), 0, sin(glm::radians(m_angleFacing)));
+    glm::vec3 dir = glm::vec3(cos(m_angleFacing), 0, sin(m_angleFacing));
     dir = glm::normalize(dir);
-    m_position = m_position + m_velocity*dir;
+    m_position = m_position + m_speed*dir;
 
     printPosition();
-
-
-
 
 
 }
@@ -70,9 +67,33 @@ void Car::turnRight() {
     m_angleFacing += -90;
 }
 
+
+// https://msl.cs.uiuc.edu/planning/node658.html
+void Car::drive(float steeringAngle, float speed) {
+
+    if (steeringAngle > M_PI/2) {
+        std::cout << "max steering angle exceeded" << std::endl;
+    }
+
+    if (speed > 1) {
+        std::cout << "max speed exceeded" << std::endl;
+    }
+
+    float dtheta = speed/m_wheelbase * tan(steeringAngle);
+    m_angleFacing = m_angleFacing + dtheta;
+
+    float dx = speed*cos(m_angleFacing);
+    float dz = -1*speed*sin(m_angleFacing);
+
+    m_position = glm::vec3(m_position.x + dx, 0, m_position.z + dz);
+
+    printPosition();
+
+}
+
 void Car::printPosition() {
     std::cout << "pos: " << m_position.x << ", " << m_position.y << ", " << m_position.z << std::endl;
-    std::cout << "angleFacing: " << m_angleFacing << std::endl;
+    std::cout << "angleFacing: " << glm::degrees(m_angleFacing) << std::endl;
 
 }
 

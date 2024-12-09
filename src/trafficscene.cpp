@@ -28,16 +28,18 @@ void TrafficScene::update(int time) {
     std::cout << "new frame: " << time << std::endl;
     for (Car* car : m_cars) {
 
-        car->setVelocity(0.02);
+        car->drive(glm::radians(45.0), 0.02);
 
-        car->goForward();
+        // car->setVelocity(0.02);
 
-        if (time % 20 == 0) {
-            car->turnRight();
-            std::cout << "car turn" << std::endl;
-        } else {
-            car->goForward();
-        }
+        // car->goForward();
+
+        // if (time % 20 == 0) {
+        //     car->turnRight();
+        //     std::cout << "car turn" << std::endl;
+        // } else {
+        //     car->goForward();
+        // }
 
 
     }

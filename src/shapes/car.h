@@ -18,6 +18,7 @@ public:
     void goForward();
     void turnRight();
     void setVelocity(float v);
+    void drive(float steeringAngle, float speed);
 
 
     void printMatrix4x4(glm::mat4 M) {
@@ -35,16 +36,18 @@ public:
 
 private:
     glm::vec3 m_position = glm::vec3(0.0);
-    glm::vec3 m_prev_position = glm::vec3(0.0);
     float m_angleFacing = 0.0;
-    float m_prev_angleFacing = 0.0;
+
+    float m_turningTurning = 0.0;
 
     // glm::mat4 m_ctm;
     // RenderShapeData m_wheel;
     RenderShapeData m_body;
 
-    float m_velocity = 0.0;
+    float m_speed = 0.0;
     float m_acceleration = 0.0;
+
+    float m_wheelbase = 1;
 
 
 };
