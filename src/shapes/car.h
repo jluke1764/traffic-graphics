@@ -34,6 +34,8 @@ public:
 
     void printPosition();
 
+    void update(int time);
+
 
 private:
     glm::vec3 m_position = glm::vec3(0.0);
@@ -48,16 +50,12 @@ private:
 
     RenderShapeData m_wheelFL;
     glm::mat4 m_translateFL;
-
     RenderShapeData m_wheelFR;
     glm::mat4 m_translateFR;
-
     RenderShapeData m_wheelBL;
     glm::mat4 m_translateBL;
-
     RenderShapeData m_wheelBR;
     glm::mat4 m_translateBR;
-
     glm::mat4 m_scaleWheel;
     glm::mat4 m_rotateWheelLeft;
     glm::mat4 m_rotateWheelRight;
@@ -71,6 +69,7 @@ private:
     float m_acceleration = 0.0;
 
     float m_wheelbase = 2.5;
+    float m_wheelRadius = 0.5*0.7; //based on scaling
 
 
 };

@@ -97,6 +97,7 @@ void Car::setVelocity(float v) {
     m_speed = v;
 }
 
+//move without kinematics
 void Car::goForward() {
     std::cout << "go forward" << std::endl;
 
@@ -109,6 +110,7 @@ void Car::goForward() {
 
 }
 
+//turn without kinematics
 void Car::turnRight() {
     m_directionAngle += glm::radians(-90.0);
 }
@@ -136,7 +138,9 @@ void Car::drive(float steeringAngleDegrees, float speed) {
     m_position = glm::vec3(m_position.x + dx, 0, m_position.z + dz);
 
     //visually roll wheels
-    float angularVelocity = .01;
+    //speed is distance travelled in 1 timestep
+    float angularVelocity = speed/m_wheelRadius;
+
     glm::mat4 rollingRotation = glm::rotate(glm::mat4(1.0), angularVelocity, {0, 1, 0});
     //visually steer tires
     glm::mat4 steeringRotation = glm::rotate(glm::mat4(1.0), steeringAngle, {0, 1, 0});
@@ -155,5 +159,14 @@ void Car::printPosition() {
     std::cout << "angleFacing: " << glm::degrees(m_directionAngle) << std::endl;
 
 }
+
+void Car::update(int time) {
+
+}
+
+// void Car::driveRightCorner() {
+//     //until car is facing 90 degrees to the right from its starting direction, steer the car 30 degrees to the right
+
+// }
 
 
