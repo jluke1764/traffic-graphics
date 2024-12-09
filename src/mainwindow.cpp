@@ -48,7 +48,7 @@ void MainWindow::initialize() {
     QLabel *far_label = new QLabel(); // Far plane label
     far_label->setText("Far Plane:");
     QLabel *sun_label = new QLabel(); // Sun label
-    sun_label->setText("Sun:");
+    sun_label->setText("Time of Day:");
     QLabel *traffic_label = new QLabel(); // Traffic label
     traffic_label->setText("Traffic:");
 
@@ -161,15 +161,15 @@ void MainWindow::initialize() {
     // Create slider controls to control near/far planes
     sunSlider = new QSlider(Qt::Orientation::Horizontal); // Near plane slider
     sunSlider->setTickInterval(1);
-    sunSlider->setMinimum(1);
-    sunSlider->setMaximum(1000);
-    sunSlider->setValue(10);
+    sunSlider->setMinimum(0);
+    sunSlider->setMaximum(48);
+    sunSlider->setValue(24);
 
     sunBox = new QDoubleSpinBox();
-    sunBox->setMinimum(0.01f);
-    sunBox->setMaximum(10.f);
-    sunBox->setSingleStep(0.1f);
-    sunBox->setValue(0.1f);
+    sunBox->setMinimum(0.f);
+    sunBox->setMaximum(24.f);
+    sunBox->setSingleStep(0.5f);
+    sunBox->setValue(12.f);
 
     trafficSlider = new QSlider(Qt::Orientation::Horizontal); // Far plane slider
     trafficSlider->setTickInterval(1);
@@ -425,7 +425,7 @@ void MainWindow::onValChangeFarBox(double newValue) {
 
 void MainWindow::onValChangeSunSlider(int newValue) {
     //nearSlider->setValue(newValue);
-    sunBox->setValue(newValue/100.f);
+    sunBox->setValue(newValue/2.f);
     settings.sun = sunBox->value();
     realtime->settingsChanged();
 }
@@ -438,7 +438,7 @@ void MainWindow::onValChangeTrafficSlider(int newValue) {
 }
 
 void MainWindow::onValChangeSunBox(double newValue) {
-    sunSlider->setValue(int(newValue*100.f));
+    sunSlider->setValue(int(newValue*2.f));
     //nearBox->setValue(newValue);
     settings.sun = sunBox->value();
     realtime->settingsChanged();

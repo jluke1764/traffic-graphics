@@ -616,19 +616,37 @@ void Realtime::sceneChanged() {
     update(); // asks for a PaintGL() call to occur
 }
 
+void Realtime::setTimeOfDay() {
+    if(time_of_day > 18.f || time_of_day < 6.f) { //night
+        m_metaData.lights[0].color = glm::vec4(0);
+    } else {
+        float angle = glm::radians(180.f * (time_of_day - 6)/12.f);
+        float intensity = 6.f - abs(time_of_day - 12.f);
+
+        m_metaData.lights[0].dir = glm::vec4(glm::cos(angle), -glm::sin(angle), 0, 0);
+        m_metaData.lights[0].color = glm::vec4(intensity);
+    }
+    updateLights();
+}
+
 void Realtime::settingsChanged() {
     if (!initialized) return;
     if (param1 != settings.shapeParameter1 || param2 != settings.shapeParameter2) {
         tesselateShapes();
     }
-    if (near != settings.nearPlane || far != settings.farPlane) {
+    if (_near != settings.nearPlane || _far != settings.farPlane) {
         Camera camera(m_metaData.cameraData, size().width(), size().height());
         m_proj = camera.getProjectionMatrix();
     }
     param1 = settings.shapeParameter1;
     param2 = settings.shapeParameter2;
-    near = settings.nearPlane;
-    far = settings.farPlane;
+    _near = settings.nearPlane;
+    _far = settings.farPlane;
+
+    if(time_of_day != settings.sun) {
+        time_of_day = settings.sun;
+        setTimeOfDay();
+    }
 
     update(); // asks for a PaintGL() call to occur
 }
