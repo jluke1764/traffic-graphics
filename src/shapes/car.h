@@ -13,6 +13,7 @@ class Car
 {
 public:
     Car();
+    Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAngle);
 
     std::vector<RenderShapeData> getShapeData();
     void goForward();
@@ -36,18 +37,40 @@ public:
 
 private:
     glm::vec3 m_position = glm::vec3(0.0);
-    float m_angleFacing = 0.0;
+    float m_directionAngle = 0.0;
 
-    float m_turningTurning = 0.0;
+    float m_steeringAngle = 0.0;
 
     // glm::mat4 m_ctm;
-    // RenderShapeData m_wheel;
     RenderShapeData m_body;
+    glm::mat4 m_translateBody;
+    glm::mat4 m_scaleBody;
+
+    RenderShapeData m_wheelFL;
+    glm::mat4 m_translateFL;
+
+    RenderShapeData m_wheelFR;
+    glm::mat4 m_translateFR;
+
+    RenderShapeData m_wheelBL;
+    glm::mat4 m_translateBL;
+
+    RenderShapeData m_wheelBR;
+    glm::mat4 m_translateBR;
+
+    glm::mat4 m_scaleWheel;
+    glm::mat4 m_rotateWheelLeft;
+    glm::mat4 m_rotateWheelRight;
+
+
+
+
+
 
     float m_speed = 0.0;
     float m_acceleration = 0.0;
 
-    float m_wheelbase = 1;
+    float m_wheelbase = 2.5;
 
 
 };

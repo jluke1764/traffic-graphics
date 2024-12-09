@@ -1,9 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="resources/shaders/default.frag">/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/resources/shaders/default.frag</file>
-    <file alias="resources/shaders/default.vert">/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/resources/shaders/default.vert</file>
-    <file alias="resources/shaders/texture.frag">/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/resources/shaders/texture.frag</file>
-    <file alias="resources/shaders/texture.vert">/Users/jackieluke/Documents/Grad/graphics/traffic-graphics/resources/shaders/texture.vert</file>
-  </qresource>
-</RCC>
-

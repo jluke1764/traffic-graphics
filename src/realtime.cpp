@@ -789,8 +789,8 @@ void Realtime::timerEvent(QTimerEvent *event) {
 
 
     //update car movement
-    // m_trafficScene.update(m_tickCount);
-    // m_tickCount++;
+    m_trafficScene.update(m_tickCount);
+    m_tickCount++;
 
     if (m_keyMap[Qt::Key_W]) {
         m_metaData.cameraData.pos += glm::normalize(m_metaData.cameraData.look)*(5.f*deltaTime);
