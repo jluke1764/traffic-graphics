@@ -36,6 +36,9 @@ void MainWindow::initialize() {
     QLabel *ec_label = new QLabel(); // Extra Credit label
     ec_label->setText("Extra Credit");
     ec_label->setFont(font);
+    QLabel *scene_label = new QLabel(); // Scene Interaction label
+    scene_label->setText("Scene Interaction");
+    scene_label->setFont(font);
     QLabel *param1_label = new QLabel(); // Parameter 1 label
     param1_label->setText("Parameter 1:");
     QLabel *param2_label = new QLabel(); // Parameter 2 label
@@ -44,23 +47,27 @@ void MainWindow::initialize() {
     near_label->setText("Near Plane:");
     QLabel *far_label = new QLabel(); // Far plane label
     far_label->setText("Far Plane:");
+    QLabel *sun_label = new QLabel(); // Sun label
+    sun_label->setText("Sun:");
+    QLabel *traffic_label = new QLabel(); // Traffic label
+    traffic_label->setText("Traffic:");
 
 
 
     // Create checkbox for per-pixel filter
     filter1 = new QCheckBox();
-    filter1->setText(QStringLiteral("Per-Pixel Filter"));
+    filter1->setText(QStringLiteral("Invert"));
     filter1->setChecked(false);
 
     // Create checkbox for kernel-based filter
     filter2 = new QCheckBox();
-    filter2->setText(QStringLiteral("Kernel-Based Filter"));
+    filter2->setText(QStringLiteral("Sharpen"));
     filter2->setChecked(false);
 
     // Create file uploader for scene file
     uploadFile = new QPushButton();
     uploadFile->setText(QStringLiteral("Upload Scene File"));
-    
+
     saveImage = new QPushButton();
     saveImage->setText(QStringLiteral("Save image"));
 
@@ -144,21 +151,62 @@ void MainWindow::initialize() {
     lfar->addWidget(farBox);
     farLayout->setLayout(lfar);
 
+
+    // Creates the boxes containing the camera sliders and number boxes
+    QGroupBox *sunLayout = new QGroupBox(); // horizonal near slider alignment
+    QHBoxLayout *lsun = new QHBoxLayout();
+    QGroupBox *trafficLayout = new QGroupBox(); // horizonal far slider alignment
+    QHBoxLayout *ltraffic = new QHBoxLayout();
+
+    // Create slider controls to control near/far planes
+    sunSlider = new QSlider(Qt::Orientation::Horizontal); // Near plane slider
+    sunSlider->setTickInterval(1);
+    sunSlider->setMinimum(1);
+    sunSlider->setMaximum(1000);
+    sunSlider->setValue(10);
+
+    sunBox = new QDoubleSpinBox();
+    sunBox->setMinimum(0.01f);
+    sunBox->setMaximum(10.f);
+    sunBox->setSingleStep(0.1f);
+    sunBox->setValue(0.1f);
+
+    trafficSlider = new QSlider(Qt::Orientation::Horizontal); // Far plane slider
+    trafficSlider->setTickInterval(1);
+    trafficSlider->setMinimum(1000);
+    trafficSlider->setMaximum(10000);
+    trafficSlider->setValue(10000);
+
+    trafficBox = new QDoubleSpinBox();
+    trafficBox->setMinimum(10.f);
+    trafficBox->setMaximum(100.f);
+    trafficBox->setSingleStep(0.1f);
+    trafficBox->setValue(100.f);
+
+    // Adds the slider and number box to the parameter layouts
+    lsun->addWidget(sunSlider);
+    lsun->addWidget(sunBox);
+    sunLayout->setLayout(lsun);
+
+    ltraffic->addWidget(trafficSlider);
+    ltraffic->addWidget(trafficBox);
+    trafficLayout->setLayout(ltraffic);
+
     // Extra Credit:
     ec1 = new QCheckBox();
-    ec1->setText(QStringLiteral("Extra Credit 1"));
+    ec1->setText(QStringLiteral("Grayscale"));
     ec1->setChecked(false);
 
     ec2 = new QCheckBox();
-    ec2->setText(QStringLiteral("Extra Credit 2"));
+    ec2->setText(QStringLiteral("Blur"));
     ec2->setChecked(false);
 
     ec3 = new QCheckBox();
-    ec3->setText(QStringLiteral("Extra Credit 3"));
+    ec3->setText(QStringLiteral("Sepia"));
     ec3->setChecked(false);
 
     ec4 = new QCheckBox();
-    ec4->setText(QStringLiteral("Extra Credit 4"));
+    ec4->setText(QStringLiteral("Edge Detection"));
     ec4->setChecked(false);
 
     vLayout->addWidget(uploadFile);
@@ -168,11 +216,19 @@ void MainWindow::initialize() {
     vLayout->addWidget(p1Layout);
     vLayout->addWidget(param2_label);
     vLayout->addWidget(p2Layout);
+
     vLayout->addWidget(camera_label);
     vLayout->addWidget(near_label);
     vLayout->addWidget(nearLayout);
     vLayout->addWidget(far_label);
     vLayout->addWidget(farLayout);
+
+    vLayout->addWidget(scene_label);
+    vLayout->addWidget(sun_label);
+    vLayout->addWidget(sunLayout);
+    vLayout->addWidget(traffic_label);
+    vLayout->addWidget(trafficLayout);
+
     vLayout->addWidget(filters_label);
     vLayout->addWidget(filter1);
     vLayout->addWidget(filter2);
@@ -208,6 +264,8 @@ void MainWindow::connectUIElements() {
     connectParam2();
     connectNear();
     connectFar();
+    connectSun();
+    connectTraffic();
     connectExtraCredit();
 }
 
@@ -249,6 +307,18 @@ void MainWindow::connectFar() {
     connect(farSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeFarSlider);
     connect(farBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &MainWindow::onValChangeFarBox);
+}
+
+void MainWindow::connectSun() {
+    connect(sunSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeSunSlider);
+    connect(sunBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &MainWindow::onValChangeSunBox);
+}
+
+void MainWindow::connectTraffic() {
+    connect(trafficSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeTrafficSlider);
+    connect(trafficBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &MainWindow::onValChangeTrafficBox);
 }
 
 void MainWindow::connectExtraCredit() {
@@ -350,6 +420,34 @@ void MainWindow::onValChangeFarBox(double newValue) {
     farSlider->setValue(int(newValue*100.f));
     //farBox->setValue(newValue);
     settings.farPlane = farBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeSunSlider(int newValue) {
+    //nearSlider->setValue(newValue);
+    sunBox->setValue(newValue/100.f);
+    settings.sun = sunBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTrafficSlider(int newValue) {
+    //farSlider->setValue(newValue);
+    trafficBox->setValue(newValue/100.f);
+    settings.traffic = trafficBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeSunBox(double newValue) {
+    sunSlider->setValue(int(newValue*100.f));
+    //nearBox->setValue(newValue);
+    settings.sun = sunBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTrafficBox(double newValue) {
+    trafficSlider->setValue(int(newValue*100.f));
+    //farBox->setValue(newValue);
+    settings.traffic = trafficBox->value();
     realtime->settingsChanged();
 }
 
