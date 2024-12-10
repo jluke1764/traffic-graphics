@@ -14,6 +14,9 @@
 #include "shapes/cone.h"
 #include "debug.h"
 #include "camera/camera.h"
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
 
 void printVector(const std::string &name, const glm::vec4 &v) {
     std::cout << name << ": ";
@@ -563,25 +566,261 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
+bool boxesOverlap(const std::array<float,4> &a, const std::array<float,4> &b) {
+    bool overlapX = (a[0] < b[1]) && (a[1] > b[0]);
+    bool overlapZ = (a[2] < b[3]) && (a[3] > b[2]);
+    return overlapX && overlapZ;
+}
+
 void Realtime::tileCity() {
-    RenderData block;
+    static bool seeded = false;
+    if (!seeded) {
+        srand((unsigned int)time(nullptr));
+        seeded = true;
+    }
 
-    SceneParser::parse("scenefiles/block.json", block);
+    RenderData blockData;
+    SceneParser::parse("scenefiles/block.json", blockData);
 
-    for(int x = -5; x <= 5; x++) {
-        for(int z = -5; z <= 5; z++) {
-            glm::mat4 translation = glm::transpose(glm::mat4(1,0,0,x,
-                                                       0,1,0,0,
-                                                       0,0,1,z,
-                                                       0,0,0,1));
+    int citySize = 5;
+    float blockSpacing = 1.0f;
+    int numBuildings = 4;
+    float empireBlockChance = 0.02f;
 
-            for(RenderShapeData s : block.shapes) {
-                s.ctm = translation * s.ctm;
-                m_metaData.shapes.push_back(s);
+    std::vector<RenderShapeData> baseBlockShapes;
+    RenderShapeData whiteColumnData;
+    bool whiteColumnFound = false;
+
+    // Get white column primitive, ignore ctm from the file
+    for (auto &s : blockData.shapes) {
+        bool isWhite =
+            (s.primitive.type == PrimitiveType::PRIMITIVE_CUBE) &&
+            fabs(s.primitive.material.cDiffuse.r - 0.9f) < 0.001f &&
+            fabs(s.primitive.material.cDiffuse.g - 0.9f) < 0.001f &&
+            fabs(s.primitive.material.cDiffuse.b - 0.9f) < 0.001f;
+
+        glm::vec3 scaleApprox(
+            glm::length(glm::vec3(s.ctm[0])),
+            glm::length(glm::vec3(s.ctm[1])),
+            glm::length(glm::vec3(s.ctm[2]))
+            );
+
+        bool scaleMatchesWhite = (fabs(scaleApprox.x - 0.3f) < 0.05f &&
+                                  fabs(scaleApprox.y - 1.0f) < 0.05f &&
+                                  fabs(scaleApprox.z - 0.3f) < 0.05f);
+
+        if (isWhite && scaleMatchesWhite && !whiteColumnFound) {
+            // Copy only the primitive and material data, not the ctm
+            whiteColumnData.primitive = s.primitive;
+            whiteColumnFound = true;
+        } else {
+            baseBlockShapes.push_back(s);
+        }
+    }
+
+    for (int blockIx = -citySize; blockIx <= citySize; blockIx++) {
+        for (int blockIz = -citySize; blockIz <= citySize; blockIz++) {
+            float blockCenterX = blockIx * blockSpacing;
+            float blockCenterZ = blockIz * blockSpacing;
+
+            glm::mat4 blockTranslate = glm::translate(glm::vec3(blockCenterX, 0.f, blockCenterZ));
+
+            bool isEmpireBlock = ((float)rand()/RAND_MAX) < empireBlockChance;
+            bool placeWhiteColumn = false;
+            if (!isEmpireBlock && whiteColumnFound) {
+                placeWhiteColumn = ((float)rand()/RAND_MAX) < 0.5f;
+            }
+
+            // Place ground and roads
+            for (auto &s : baseBlockShapes) {
+                RenderShapeData shape = s;
+                shape.ctm = blockTranslate * shape.ctm;
+                m_metaData.shapes.push_back(shape);
+            }
+
+            std::vector<std::array<float,4>> placedBoxes;
+
+            // white column
+            if (!isEmpireBlock && placeWhiteColumn && whiteColumnFound) {
+                float heightFactor = 0.5f + ((float)rand()/RAND_MAX)*1.0f;
+
+                float colBaseWidth = 0.3f;
+                float halfW = colBaseWidth / 2.0f;
+                float maxOffset = 0.35f - halfW;
+                maxOffset = std::max(0.0f, maxOffset);
+
+                float columnHeight = 1.0f * heightFactor;
+
+                bool placedWC = false;
+                for (int attempt = 0; attempt < 10 && !placedWC; attempt++) {
+                    float offsetX = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+                    float offsetZ = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+
+                    float worldX = blockCenterX + offsetX;
+                    float worldZ = blockCenterZ + offsetZ;
+
+                    // Bottom at y=0, so top is at y=columnHeight, center at columnHeight/2
+                    float yPos = columnHeight / 2.0f;
+
+                    glm::mat4 wcTransform = glm::translate(glm::vec3(worldX, yPos, worldZ))
+                                            * glm::scale(glm::vec3(colBaseWidth, columnHeight, colBaseWidth));
+
+                    RenderShapeData wc = whiteColumnData;
+                    wc.ctm = wcTransform;
+                    m_metaData.shapes.push_back(wc);
+
+                    // Compute bounding box in world coords
+                    float colHalfW = colBaseWidth / 2.0f;
+                    float left   = worldX - colHalfW;
+                    float right  = worldX + colHalfW;
+                    float zMin   = worldZ - colHalfW;
+                    float zMax   = worldZ + colHalfW;
+                    std::array<float,4> candidateBox = {left, right, zMin, zMax};
+
+                    bool overlap = false;
+                    for (auto &box : placedBoxes) {
+                        if (boxesOverlap(candidateBox, box)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+
+                    if (overlap) {
+                        // Remove last placed
+                        m_metaData.shapes.pop_back();
+                    } else {
+                        placedBoxes.push_back(candidateBox);
+                        placedWC = true;
+                    }
+                }
+            }
+
+            // Empire block
+            if (isEmpireBlock) {
+                float buildingHeight = 1.5f + ((float)rand()/RAND_MAX)*1.0f;
+                float buildingWidth = 0.3f + ((float)rand()/RAND_MAX)*0.1f;
+
+                float gray = 0.4f + ((float)rand()/RAND_MAX)*0.35f;
+                float r = gray, g = gray, b = gray;
+
+                float worldX = blockCenterX;
+                float worldZ = blockCenterZ;
+
+                RenderShapeData empireBuilding;
+                empireBuilding.primitive.type = PrimitiveType::PRIMITIVE_CUBE;
+                empireBuilding.primitive.material.cAmbient = glm::vec4(r*0.5f, g*0.5f, b*0.5f, 1.f);
+                empireBuilding.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
+                empireBuilding.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                empireBuilding.primitive.material.shininess = 10.f;
+
+                glm::mat4 empireTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
+                                            * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
+
+                empireBuilding.ctm = empireTransform;
+                m_metaData.shapes.push_back(empireBuilding);
+
+                float spireHeightFactor = 0.3f + ((float)rand()/RAND_MAX)*1.0f;
+                float spireHeight = buildingHeight * spireHeightFactor;
+
+                RenderShapeData spire;
+                spire.primitive.type = PrimitiveType::PRIMITIVE_CONE;
+                float rr = r*0.8f, rg = g*0.8f, rb = b*0.8f;
+                spire.primitive.material.cAmbient = glm::vec4(rr*0.5f, rg*0.5f, rb*0.5f, 1.f);
+                spire.primitive.material.cDiffuse = glm::vec4(rr, rg, rb, 1.f);
+                spire.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                spire.primitive.material.shininess = 10.f;
+
+                glm::mat4 spireTransform = glm::translate(glm::vec3(worldX, buildingHeight + spireHeight/2.0f, worldZ))
+                                           * glm::scale(glm::vec3(buildingWidth * 0.5f, spireHeight, buildingWidth * 0.5f));
+
+                spire.ctm = spireTransform;
+                m_metaData.shapes.push_back(spire);
+                continue;
+            }
+
+            // Normal buildings
+            for (int i = 0; i < numBuildings; i++) {
+                float buildingWidth = 0.1f + ((float)rand()/RAND_MAX)*0.1f;
+                float halfW = buildingWidth/2.0f;
+                float maxOffset = 0.35f - halfW;
+                maxOffset = std::max(0.0f, maxOffset);
+
+                float buildingHeight = 0.2f + ((float)rand()/RAND_MAX)*0.8f;
+
+                float gray = 0.4f + ((float)rand()/RAND_MAX)*0.35f;
+                float r = gray, g = gray, b = gray;
+
+                bool placed = false;
+                for (int attempt = 0; attempt < 10 && !placed; attempt++) {
+                    float offsetX = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+                    float offsetZ = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+
+                    float worldX = blockCenterX + offsetX;
+                    float worldZ = blockCenterZ + offsetZ;
+
+                    float left   = worldX - halfW;
+                    float right  = worldX + halfW;
+                    float zMin   = worldZ - halfW;
+                    float zMax   = worldZ + halfW;
+                    std::array<float,4> candidateBox = {left, right, zMin, zMax};
+
+                    bool overlap = false;
+                    for (auto &box : placedBoxes) {
+                        if (boxesOverlap(candidateBox, box)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+
+                    if (!overlap) {
+                        RenderShapeData building;
+                        building.primitive.type = PrimitiveType::PRIMITIVE_CUBE;
+                        building.primitive.material.cAmbient = glm::vec4(r*0.5f, g*0.5f, b*0.5f, 1.f);
+                        building.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
+                        building.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                        building.primitive.material.shininess = 10.f;
+
+                        glm::mat4 buildingTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
+                                                      * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
+
+                        building.ctm = buildingTransform;
+                        m_metaData.shapes.push_back(building);
+
+                        placedBoxes.push_back(candidateBox);
+
+                        bool addRoof = ((rand() % 2) == 0);
+                        if (addRoof) {
+                            RenderShapeData roof;
+                            roof.primitive.type = PrimitiveType::PRIMITIVE_CONE;
+
+                            float roofFactor = 0.8f;
+                            float rr = std::clamp(r*roofFactor, 0.f,1.f);
+                            float rg = std::clamp(g*roofFactor, 0.f,1.f);
+                            float rb = std::clamp(b*roofFactor, 0.f,1.f);
+
+                            roof.primitive.material.cAmbient = glm::vec4(rr*0.5f, rg*0.5f, rb*0.5f, 1.f);
+                            roof.primitive.material.cDiffuse = glm::vec4(rr, rg, rb, 1.f);
+                            roof.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                            roof.primitive.material.shininess = 10.f;
+
+                            float roofHeight = buildingHeight * 0.3f;
+                            float roofBaseScale = buildingWidth * 1.1f;
+
+                            glm::mat4 roofTransform = glm::translate(glm::vec3(worldX, buildingHeight + roofHeight/2.0f, worldZ))
+                                                      * glm::scale(glm::vec3(roofBaseScale, roofHeight, roofBaseScale));
+
+                            roof.ctm = roofTransform;
+                            m_metaData.shapes.push_back(roof);
+                        }
+
+                        placed = true;
+                    }
+                }
             }
         }
     }
 }
+
 
 void Realtime::sceneChanged() {
     makeCurrent();
