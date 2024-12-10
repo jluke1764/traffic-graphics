@@ -18,6 +18,7 @@ struct Light {
 //         received post-interpolation from the vertex shader
 in vec4 worldSpacePosition;
 in vec3 worldSpaceNormal;
+in vec4 eyeSpacePos;
 
 // Task 10: declare an out vec4 for your output color
 out vec4 fragColor;
@@ -30,6 +31,8 @@ uniform float k_s;
 uniform vec4 O_a;
 uniform vec4 O_d;
 uniform vec4 O_s;
+
+uniform bool useFog;
 
 
 uniform float shininess;
@@ -46,7 +49,19 @@ uniform Light[10] lights;
 
 //need to figure out how to pass these in
 
+float getFogAmt(float fog_coord) {
+    float start = 2.0;
+    float end = 5.0;
+
+    float r = (end - fog_coord) / (end - start);
+
+    return 1.0 - clamp(r, 0.0, 1.0);
+}
+
+
 void main() {
+    vec4 fogColor = vec4(.7,.7,.7,1);
+
     // Remember that you need to renormalize vectors here if you want them to be normalized
 
     // Task 10: set your output color to white (i.e. vec4(1.0)). Make sure you get a white circle!
@@ -133,5 +148,9 @@ void main() {
             fragColor[2] += intensity*f_att*light.color[2]*k_s*O_s[2]*pow(specular_dot_product,shininess);
         }
 
+    }
+    float fogC = abs(eyeSpacePos.z / eyeSpacePos.w);
+    if(useFog) {
+        fragColor = mix(fragColor, fogColor, getFogAmt(fogC));
     }
 }

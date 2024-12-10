@@ -9,6 +9,7 @@ layout(location = 1) in vec3 objectSpaceNormal;
 //         to be passed to the fragment shader
 out vec4 worldSpacePosition;
 out vec3 worldSpaceNormal;
+out vec4 eyeSpacePos;
 
 // Task 6: declare a uniform mat4 to store model matrix
 uniform mat4 model_matrix;
@@ -30,4 +31,6 @@ void main() {
 
     // Task 9: set gl_Position to the object space position transformed to clip space
     gl_Position = model_proj*model_view*worldSpacePosition;
+
+    eyeSpacePos = model_view * worldSpacePosition;
 }

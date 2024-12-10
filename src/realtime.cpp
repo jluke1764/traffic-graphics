@@ -297,7 +297,6 @@ void Realtime::makeFBO(){
 }
 
 void Realtime::paintGeometry() {
-
     // Students: anything requiring OpenGL calls every frame should be done here
     // Clear screen color and depth before painting
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -339,6 +338,8 @@ void Realtime::paintGeometry() {
 
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
+
+        glUniform1i(glGetUniformLocation(m_shader,"useFog"), false);
 
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
@@ -406,6 +407,7 @@ void Realtime::paintGL() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glErrorCheck();
+
     paintGeometry();
 
     // Task 25: Bind the default framebuffer
@@ -617,14 +619,23 @@ void Realtime::sceneChanged() {
 }
 
 void Realtime::setTimeOfDay() {
-    if(time_of_day > 18.f || time_of_day < 6.f) { //night
+    float sunrise = 6.f;
+    float sunset = 20.f;
+
+    if(time_of_day > sunset || time_of_day < sunrise) { //night
         m_metaData.lights[0].color = glm::vec4(0);
     } else {
-        float angle = glm::radians(180.f * (time_of_day - 6)/12.f);
-        float intensity = 6.f - abs(time_of_day - 12.f);
+        float day_pcnt = (time_of_day - sunrise)/(sunset - sunrise);
+        float angle = glm::radians(180.f * day_pcnt);
 
         m_metaData.lights[0].dir = glm::vec4(glm::cos(angle), -glm::sin(angle), 0, 0);
-        m_metaData.lights[0].color = glm::vec4(intensity);
+
+        float intensity = 1.f - abs(.5f-day_pcnt);
+        if(day_pcnt > .85f) { // sunset
+            m_metaData.lights[0].color = glm::vec4(1, .34, .2, 1) * intensity;
+        } else {
+            m_metaData.lights[0].color = glm::vec4(.8, .8, .8, 1) * intensity;
+        }
     }
     updateLights();
 }
