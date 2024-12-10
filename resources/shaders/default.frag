@@ -59,11 +59,6 @@ void main() {
     // Task 11: set your output color to the absolute value of your world-space normals,
     //          to make sure your normals are correct.
     // fragColor = abs(worldSpaceNormal);
-    if (has_texture) {
-        fragColor = texture(tex, UV);
-    } else {
-        fragColor = vec4(0.f, 0.f, 0.f, 1.f);
-    }
     vec3 directionToCamera = vec3(cameraPosition) - vec3(worldSpacePosition);
     directionToCamera = normalize(directionToCamera);
 

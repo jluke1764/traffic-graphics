@@ -678,15 +678,16 @@ void Realtime::sceneChanged() {
 
             // Task 7: Unbind kitten texture
             glBindTexture(GL_TEXTURE_2D, 0);
+
+            glUseProgram(m_shader);
+            glErrorCheck();
+            glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+            glErrorCheck();
+            glUseProgram(0);
+            glErrorCheck();
         }
     }
 
-    glUseProgram(m_shader);
-    glErrorCheck();
-    glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
-    glErrorCheck();
-    glUseProgram(0);
-    glErrorCheck();
 
     update(); // asks for a PaintGL() call to occur
 }
