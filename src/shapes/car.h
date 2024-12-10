@@ -36,12 +36,26 @@ public:
 
     void update(int time);
 
+    void setDesiredPosition(glm::vec3 desiredPos);
+    glm::vec3 getPosition();
+
+
 
 private:
     glm::vec3 m_position = glm::vec3(0.0);
     float m_directionAngle = 0.0;
 
+    float m_speed = 0.5; //position change in one timestep
+    float m_acceleration = 0.0;
+
+    float m_wheelbase = 2.5;
+    float m_wheelRadius = 0.5*0.7; //based on scaling
+
     float m_steeringAngle = 0.0;
+    float m_steeringSpeed = 1.0; //max angle change in one timestep
+    float m_maxSteeringAngle = glm::radians(30.0f);
+
+
 
     // glm::mat4 m_ctm;
     RenderShapeData m_body;
@@ -60,16 +74,16 @@ private:
     glm::mat4 m_rotateWheelLeft;
     glm::mat4 m_rotateWheelRight;
 
+    glm::vec3 m_desiredPosition = glm::vec3(0.0);
 
 
 
 
 
-    float m_speed = 0.0;
-    float m_acceleration = 0.0;
 
-    float m_wheelbase = 2.5;
-    float m_wheelRadius = 0.5*0.7; //based on scaling
+
+
+
 
 
 };

@@ -647,7 +647,7 @@ void Realtime::sceneChanged() {
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
 
-    tileCity();
+    // tileCity();
 
     Realtime::updateLights();
     glErrorCheck();
@@ -810,11 +810,6 @@ void Realtime::timerEvent(QTimerEvent *event) {
     //change camera.pos and then update view matrix. maybe call an update view matrix function
     //global camera
 
-
-    //update car movement
-    m_trafficScene.update(m_tickCount);
-    m_tickCount++;
-
     if (m_keyMap[Qt::Key_W]) {
         m_metaData.cameraData.pos += glm::normalize(m_metaData.cameraData.look)*(5.f*deltaTime);
         updateViewMatrix();
@@ -839,6 +834,10 @@ void Realtime::timerEvent(QTimerEvent *event) {
         m_metaData.cameraData.pos += glm::vec4(0,-1,0,0)*(5.f*deltaTime);
         updateViewMatrix();
     }
+
+    //update car movement
+    // m_trafficScene.update(m_tickCount);
+    // m_tickCount++;
 
     update(); // asks for a PaintGL() call to occur
 

@@ -9,9 +9,9 @@ TrafficScene::TrafficScene() {
 
     SceneColor red = {1, 0, 0, 1};
 
-    glm::vec3 loc1 = glm::vec3(-7, 0, 7);
+    glm::vec3 loc1 = glm::vec3(0, 0, 0);
 
-    Car* car1 = new Car(red, loc1, 0.0);
+    Car* car1 = new Car(red, loc1, 90);
     m_cars.push_back(car1);
 
     // glm::vec3 loc2 = glm::vec3(-7, 0, -7);
@@ -38,15 +38,11 @@ void TrafficScene::update(int time) {
     std::cout << "new frame: " << time << std::endl;
     for (Car* car : m_cars) {
 
-        int clk = time % 1200;
-
-        if (clk < 800) {
-            car->drive(0, 1);
-        } else if (clk < 1000) {
-            car->drive(15, 1);
-        } else  {
-            car->drive(-15, 1);
+        if (time == 1) {
+            car->setDesiredPosition(car->getPosition() + glm::vec3(5, 0, 0));
         }
+
+        car->update(time);
 
 
     }

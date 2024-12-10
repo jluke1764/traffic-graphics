@@ -14,7 +14,7 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     // "shininess": 15.0
 
     m_position = startingPosition;
-    m_directionAngle = startingDirectionAngle;
+    m_directionAngle = glm::radians(startingDirectionAngle);
 
     SceneMaterial bodyMaterial = SceneMaterial{.cAmbient = {0.3*color.r, 0.3*color.g, 0.3*color.b, 1},
                                            .cDiffuse = {0.7*color.r, 0.7*color.g, 0.7*color.b, 1},
@@ -66,7 +66,10 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     m_wheelBR = RenderShapeData{.primitive = wheel,
                                  .ctm = m_translateBR*m_rotateWheelRight*m_scaleWheel};
 
+    std::cout << "current pos: " << m_position.x << ", " << m_position.y << ", " << m_position.z << std::endl;
+    std::cout << "desired pos: " << m_desiredPosition.x << ", " << m_desiredPosition.y << ", " << m_desiredPosition.z << std::endl;
 
+    std::cout << "angleFacing: " << glm::degrees(m_directionAngle) << std::endl;
 
 }
 
@@ -160,7 +163,63 @@ void Car::printPosition() {
 
 }
 
+glm::vec3 Car::getPosition() {
+    return m_position;
+}
+
+//this controls what the car will do at a given timestep
 void Car::update(int time) {
+
+    float posError = 0.1; //must have error
+    float dirError = 0.1;
+
+    //restore angles to proper ranges
+    m_steeringAngle = fmod(m_steeringAngle, 2*M_PI);
+    m_directionAngle = fmod(m_directionAngle, 2*M_PI);
+
+    //convert positions to 2d vectors
+
+
+    glm::vec2 togo = glm::vec2(m_desiredPosition.x-m_position.x, m_desiredPosition.z-m_desiredPosition.z);
+    float dist = glm::length(togo);
+
+    //if current position is not the desired position
+    if (fabs(dist) > posError) {
+
+        std::cout << "current pos: " << m_position.x << ", " << m_position.y << ", " << m_position.z << std::endl;
+        std::cout << "desired pos: " << m_desiredPosition.x << ", " << m_desiredPosition.y << ", " << m_desiredPosition.z << std::endl;
+        std::cout << "angleFacing: " << glm::degrees(m_directionAngle) << std::endl;
+
+        std::cout << "current togp: " << togo.x << ", " << togo.y << std::endl;
+        std::cout << "dist to go: " << dist << std::endl;
+
+        //calculate angle between the current angle and the angle
+
+        float desiredAngle = atan(togo.y/togo.x);
+        float angleDiff = desiredAngle - m_directionAngle;
+
+        //if the angle currently facing is not the desired angle towards the setpoint
+        if (fabs(angleDiff) > dirError) {
+
+            if (fabs(m_steeringAngle) < m_maxSteeringAngle) {
+                if (angleDiff > 0) {
+                    m_steeringAngle = m_steeringSpeed;
+
+                } else if (angleDiff < 0) {
+                    m_steeringAngle = -m_steeringSpeed;
+
+                }
+            }
+
+        }
+
+        drive(m_steeringAngle, m_speed);
+
+    }
+}
+
+void Car::setDesiredPosition(glm::vec3 desiredPos) {
+    m_desiredPosition = desiredPos;
 
 }
 
