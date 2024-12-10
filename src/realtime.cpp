@@ -154,6 +154,7 @@ void Realtime::initializeGL() {
 
     initializeGeometry();
 
+
     // Task 10: Set the texture.frag uniform for our texture
     glUseProgram(m_texture_shader);
     glErrorCheck();
@@ -563,35 +564,36 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
-void Realtime::tileCity() {
-    RenderData block;
+// void Realtime::tileCity() {
+//     RenderData block;
 
-    SceneParser::parse("scenefiles/block.json", block);
+//     SceneParser::parse("scenefiles/block.json", block);
 
-    for(int x = -5; x <= 5; x++) {
-        for(int z = -5; z <= 5; z++) {
-            glm::mat4 translation = glm::transpose(glm::mat4(1,0,0,x,
-                                                       0,1,0,0,
-                                                       0,0,1,z,
-                                                       0,0,0,1));
+//     for(int x = -5; x <= 5; x++) {
+//         for(int z = -5; z <= 5; z++) {
+//             glm::mat4 translation = glm::transpose(glm::mat4(1,0,0,x,
+//                                                        0,1,0,0,
+//                                                        0,0,1,z,
+//                                                        0,0,0,1));
 
-            for(RenderShapeData s : block.shapes) {
-                s.ctm = translation * s.ctm;
-                m_metaData.shapes.push_back(s);
-            }
-        }
-    }
-}
+//             for(RenderShapeData s : block.shapes) {
+//                 s.ctm = translation * s.ctm;
+//                 m_metaData.shapes.push_back(s);
+//             }
+//         }
+//     }
+// }
 
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
 
-    tileCity();
+    // tileCity();
 
     Realtime::updateLights();
     glErrorCheck();
+
 
     Camera camera(m_metaData.cameraData, size().width(), size().height());
 
@@ -612,6 +614,44 @@ void Realtime::sceneChanged() {
 
     glUseProgram(0);
     glErrorCheck();
+
+    int num_shapes = m_metaData.shapes.size();
+
+    for (int i=0; i<num_shapes; ++i){
+
+        RenderShapeData &shape = m_metaData.shapes[i];
+
+        if (shape.primitive.material.textureMap.isUsed) {
+
+            // Prepare filepath
+            QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+
+            // Task 1: Obtain image from filepath
+            m_image = QImage(texture_filepath);
+
+            // Task 2: Format image to fit OpenGL
+            m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+            // Task 3: Generate kitten texture
+            glGenTextures(1, &m_fbo_texture);
+
+            // Task 9: Set the active texture slot to texture slot 0
+            glActiveTexture(GL_TEXTURE0);
+
+            // Task 4: Bind kitten texture
+            glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
+
+            // Task 5: Load image into kitten texture
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+
+            // Task 6: Set min and mag filters' interpolation mode to linear
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            // Task 7: Unbind kitten texture
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+    }
 
     update(); // asks for a PaintGL() call to occur
 }

@@ -57,7 +57,7 @@ private:
     void updateVBOS();
     void tesselateShapes();
     void updateLights();
-    void tileCity();
+    // void tileCity();
 
     struct Light {
         int type;
@@ -94,6 +94,9 @@ private:
     GLuint m_fbo_renderbuffer;
     GLuint m_fbo;
     GLuint m_defaultFBO;
+
+    QImage m_image;
+
     int m_fbo_width;
     int m_fbo_height;
 
