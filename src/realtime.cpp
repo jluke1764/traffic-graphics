@@ -622,10 +622,33 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
+void Realtime::tileCity() {
+    RenderData block;
+
+    SceneParser::parse("scenefiles/block.json", block);
+
+    for(int x = -5; x <= 5; x++) {
+        for(int z = -5; z <= 5; z++) {
+            glm::mat4 translation = glm::transpose(glm::mat4(1,0,0,x,
+                                                       0,1,0,0,
+                                                       0,0,1,z,
+                                                       0,0,0,1));
+
+            for(RenderShapeData s : block.shapes) {
+                s.ctm = translation * s.ctm;
+                m_metaData.shapes.push_back(s);
+            }
+        }
+    }
+}
+
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
+
+    tileCity();
+
     Realtime::updateLights();
     glErrorCheck();
 
