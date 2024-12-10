@@ -41,7 +41,7 @@ uniform Light[10] lights;
 
 uniform bool has_texture;
 uniform float blend;
-// uniform sampler2D tex;
+uniform sampler2D tex;
 
 
 void main() {
@@ -141,8 +141,13 @@ void main() {
         }
 
     }
+    // if (has_texture) {
+    //     fragColor = vec4(UV[0], UV[1], blend, 1);
+    // } else {
+    //     fragColor = vec4(1.f);
+    // }
     if (has_texture) {
-        fragColor = vec4(UV[0], UV[1], blend, 1);
+        fragColor = vec4(texture(tex,UV));
     } else {
         fragColor = vec4(1.f);
     }

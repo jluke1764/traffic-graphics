@@ -79,6 +79,7 @@ void Cube::setVertexData() {
              glm::vec3(-0.5f, -0.5f, 0.5f),
              glm::vec3( 0.5f, -0.5f, 0.5f));
 
+
     // Task 4: Use the makeFace() function to make all 6 sides of the cube
     //left face
     makeFace(glm::vec3(-0.5f,  0.5f, -0.5f),
