@@ -231,11 +231,15 @@ void Realtime::initializeGeometry() {
         // Enable and define attribute 0 to store vertex positions
         glEnableVertexAttribArray(0);
         glErrorCheck();
-        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(0));
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(0));
         glErrorCheck();
         glEnableVertexAttribArray(1);
         glErrorCheck();
-        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glErrorCheck();
+        glEnableVertexAttribArray(2);
+        glErrorCheck();
+        glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(6 * sizeof(GLfloat)));
         glErrorCheck();
 
         // Clean-up bindings
@@ -316,7 +320,6 @@ void Realtime::paintGeometry() {
     int num_shapes = m_metaData.shapes.size();
 
     for (int i=0; i<num_shapes; ++i){
-
         RenderShapeData &shape = m_metaData.shapes[i];
 
         glm::mat4 model = shape.ctm;
@@ -358,7 +361,7 @@ void Realtime::paintGeometry() {
         glBindVertexArray(m_vaos[shapeIndex]);
         glErrorCheck();
 
-        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
+        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
         glErrorCheck();
 
         // Clean-up bindings
@@ -389,7 +392,7 @@ void Realtime::paintTexture(GLuint texture, bool invert, bool sharpen, bool gray
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 8);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
     glUseProgram(0);
@@ -563,11 +566,51 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
+void Realtime::updateTexture() {
+    int num_shapes = m_metaData.shapes.size();
+
+    for (int i=0; i<num_shapes; ++i){
+        RenderShapeData &shape = m_metaData.shapes[i];
+        // Prepare filepath
+        QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+
+        // Task 1: Obtain image from filepath
+        m_image = QImage(texture_filepath);
+
+        // Task 2: Format image to fit OpenGL
+        m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+        // Task 3: Generate kitten texture
+        glGenTextures(1, &m_fbo_texture);
+
+        // Task 9: Set the active texture slot to texture slot 0
+        glActiveTexture(GL_TEXTURE0);
+
+        // Task 4: Bind kitten texture
+        glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
+
+        // Task 5: Load image into kitten texture
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+
+        // Task 6: Set min and mag filters' interpolation mode to linear
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Task 7: Unbind kitten texture
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // glUniform1i(glGetUniformLocation(m_shader, "texture_bool"), shape.primitive.material.textureMap.isUsed);
+        // glErrorCheck();
+    }
+}
+
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
     Realtime::updateLights();
+    glErrorCheck();
+    Realtime::updateTexture();
     glErrorCheck();
 
     Camera camera(m_metaData.cameraData, size().width(), size().height());

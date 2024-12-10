@@ -41,6 +41,7 @@ protected:
     void paintTexture(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
     void paintGL() override;          // Called whenever the OpenGL context changes or by an update() request
     void resizeGL(int width, int height) override;      // Called when window size changes
+    void updateTexture();
 
 private:
     void keyPressEvent(QKeyEvent *event) override;
@@ -125,4 +126,7 @@ private:
     float param2 = settings.shapeParameter2;
     float near = settings.nearPlane;
     float far = settings.farPlane;
+
+    QImage m_image;
+    GLuint m_texture;
 };

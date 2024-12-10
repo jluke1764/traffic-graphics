@@ -14,6 +14,7 @@ public:
 
 private:
     Sphere() = delete;
+    void insertVec2(std::vector<float> &data, glm::vec2 v);
     void insertVec3(std::vector<float> &data, glm::vec3 v);
     void makeTile(glm::vec3 topLeft,
                   glm::vec3 topRight,
