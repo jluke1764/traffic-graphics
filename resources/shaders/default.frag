@@ -41,14 +41,8 @@ uniform Light[10] lights;
 
 uniform bool has_texture;
 uniform float blend;
-uniform sampler2D tex;
-// uniform float Oa;
-// uniform float Od;
-// uniform float Os;
+// uniform sampler2D tex;
 
-// uniform vec4 directionToCamera;
-
-//need to figure out how to pass these in
 
 void main() {
     // Remember that you need to renormalize vectors here if you want them to be normalized
@@ -59,6 +53,7 @@ void main() {
     // Task 11: set your output color to the absolute value of your world-space normals,
     //          to make sure your normals are correct.
     // fragColor = abs(worldSpaceNormal);
+    fragColor = vec4(0.f, 0.f, 0.f, 1.f);
     vec3 directionToCamera = vec3(cameraPosition) - vec3(worldSpacePosition);
     directionToCamera = normalize(directionToCamera);
 
@@ -120,17 +115,17 @@ void main() {
             diffuse_dot_product = 0.f;
         }
 
-        //texture mapping
-        if (has_texture) {
-            vec4 texture = texture(tex, UV);
-            fragColor += intensity*f_att*light.color*(blend*texture+(1-blend)*O_d*k_d)*diffuse_dot_product;
-        } else {
-            fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
-        }
+        // //texture mapping
+        // if (has_texture) {
+        //     vec4 texture = texture(tex, UV);
+        //     fragColor += intensity*f_att*light.color*(blend*texture+(1-blend)*O_d*k_d)*diffuse_dot_product;
+        // } else {
+        //     fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
+        // }
 
-        // fragColor[0] += intensity*f_att*light.color[0]*k_d*O_d[0]*diffuse_dot_product;
-        // fragColor[1] += intensity*f_att*light.color[1]*k_d*O_d[1]*diffuse_dot_product;
-        // fragColor[2] += intensity*f_att*light.color[2]*k_d*O_d[2]*diffuse_dot_product;
+        fragColor[0] += intensity*f_att*light.color[0]*k_d*O_d[0]*diffuse_dot_product;
+        fragColor[1] += intensity*f_att*light.color[1]*k_d*O_d[1]*diffuse_dot_product;
+        fragColor[2] += intensity*f_att*light.color[2]*k_d*O_d[2]*diffuse_dot_product;
 
         //add specular term
         vec3 R = reflect(-directionToLight, normal);
@@ -145,5 +140,10 @@ void main() {
             fragColor[2] += intensity*f_att*light.color[2]*k_s*O_s[2]*pow(specular_dot_product,shininess);
         }
 
+    }
+    if (has_texture) {
+        fragColor = vec4(UV[0], UV[1], blend, 1);
+    } else {
+        fragColor = vec4(1.f);
     }
 }

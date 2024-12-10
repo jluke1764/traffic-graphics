@@ -250,8 +250,6 @@ void Realtime::initializeGeometry() {
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glErrorCheck();
     }
-    // makeFBO();
-    // initialized = true;
 }
 
 void Realtime::makeFBO(){
@@ -390,37 +388,66 @@ void Realtime::paintPostprocess(GLuint texture, bool invert, bool sharpen, bool 
     glUniform1i(glGetUniformLocation(m_texture_shader, "blur"), blur);
     glUniform1i(glGetUniformLocation(m_texture_shader, "sepia"), sepia);
     glUniform1i(glGetUniformLocation(m_texture_shader, "edgeDetection"), edgeDetection);
+    glErrorCheck();
+    // std::cout << "edge detection: " << edgeDetection << std::endl;
 
     glBindVertexArray(m_fullscreen_vao);
+    glErrorCheck();
     // Task 10: Bind "texture" to slot 0
     glActiveTexture(GL_TEXTURE0);
+    glErrorCheck();
     glBindTexture(GL_TEXTURE_2D, texture);
+    glErrorCheck();
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    glErrorCheck();
     glBindTexture(GL_TEXTURE_2D, 0);
+    glErrorCheck();
     glBindVertexArray(0);
+    glErrorCheck();
     glUseProgram(0);
+    glErrorCheck();
 }
 
 void Realtime::paintTexture() {
     glUseProgram(m_shader);
+    glErrorCheck();
     int num_shapes = m_metaData.shapes.size();
 
     for (int i=0; i<num_shapes; ++i){
 
         RenderShapeData &shape = m_metaData.shapes[i];
-        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+        bool has_texture;
+        if (shape.primitive.material.textureMap.isUsed) {
+            has_texture = true;
+        } else {
+            has_texture = false;
+        }
+        // glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), has_texture);
+        std::cout << "isused: " << shape.primitive.material.textureMap.isUsed << std::endl;
+        glErrorCheck();
         glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
-        glBindVertexArray(m_vaos[i]);
-        // Task 10: Bind "texture" to slot 0
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+        glErrorCheck();
+//         glBindVertexArray(m_vaos[i]);
+//         glErrorCheck();
+//         // Task 10: Bind "texture" to slot 0
+//         if (shape.primitive.material.textureMap.isUsed) {
+//             glActiveTexture(GL_TEXTURE1);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+//             glErrorCheck();
 
-        glDrawArrays(GL_TRIANGLES, 0, 8);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
+//             glDrawArrays(GL_TRIANGLES, 0, 8);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, 0);
+//             glErrorCheck();
+//         }
+        // glBindVertexArray(0);
+        // glErrorCheck();
     }
     glUseProgram(0);
+    glErrorCheck();
 }
 
 void Realtime::paintGL() {
@@ -643,50 +670,57 @@ void Realtime::sceneChanged() {
     glUseProgram(0);
     glErrorCheck();
 
-    int num_shapes = m_metaData.shapes.size();
+    // int num_shapes = m_metaData.shapes.size();
 
-    for (int i=0; i<num_shapes; ++i){
+    // for (int i=0; i<num_shapes; ++i){
 
-        RenderShapeData &shape = m_metaData.shapes[i];
+    //     RenderShapeData &shape = m_metaData.shapes[i];
 
-        if (shape.primitive.material.textureMap.isUsed) {
+    //     if (shape.primitive.material.textureMap.isUsed) {
 
-            // Prepare filepath
-            QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+    //         // Prepare filepath
+    //         QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
 
-            // Task 1: Obtain image from filepath
-            m_image = QImage(texture_filepath);
+    //         // Task 1: Obtain image from filepath
+    //         m_image = QImage(texture_filepath);
 
-            // Task 2: Format image to fit OpenGL
-            m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+    //         // Task 2: Format image to fit OpenGL
+    //         m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
 
-            // Task 3: Generate kitten texture
-            glGenTextures(1, &m_kitten_texture);
+    //         // Task 3: Generate kitten texture
+    //         glGenTextures(1, &m_kitten_texture);
+    //         glErrorCheck();
 
-            // Task 9: Set the active texture slot to texture slot 0
-            glActiveTexture(GL_TEXTURE1);
+    //         // Task 9: Set the active texture slot to texture slot 0
+    //         glActiveTexture(GL_TEXTURE1);
+    //         glErrorCheck();
 
-            // Task 4: Bind kitten texture
-            glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+    //         // Task 4: Bind kitten texture
+    //         glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+    //         glErrorCheck();
 
-            // Task 5: Load image into kitten texture
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+    //         // Task 5: Load image into kitten texture
+    //         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+    //         glErrorCheck();
 
-            // Task 6: Set min and mag filters' interpolation mode to linear
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //         // Task 6: Set min and mag filters' interpolation mode to linear
+    //         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //         glErrorCheck();
+    //         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //         glErrorCheck();
 
-            // Task 7: Unbind kitten texture
-            glBindTexture(GL_TEXTURE_2D, 0);
+    //         // Task 7: Unbind kitten texture
+    //         glBindTexture(GL_TEXTURE_2D, 0);
+    //         glErrorCheck();
 
-            glUseProgram(m_shader);
-            glErrorCheck();
-            glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
-            glErrorCheck();
-            glUseProgram(0);
-            glErrorCheck();
-        }
-    }
+    //         glUseProgram(m_shader);
+    //         glErrorCheck();
+    //         glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+    //         glErrorCheck();
+    //         glUseProgram(0);
+    //         glErrorCheck();
+    //     }
+    // }
 
 
     update(); // asks for a PaintGL() call to occur
