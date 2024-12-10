@@ -115,13 +115,13 @@ void main() {
             diffuse_dot_product = 0.f;
         }
 
-        // //texture mapping
-        // if (has_texture) {
-        //     vec4 texture = texture(tex, UV);
-        //     fragColor += intensity*f_att*light.color*(blend*texture+(1-blend)*O_d*k_d)*diffuse_dot_product;
-        // } else {
-        //     fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
-        // }
+        //texture mapping
+        if (has_texture) {
+            vec4 texture = texture(tex, UV);
+            fragColor += intensity*f_att*light.color*(blend*texture+(1-blend)*O_d*k_d)*diffuse_dot_product;
+        } else {
+            fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
+        }
 
         fragColor[0] += intensity*f_att*light.color[0]*k_d*O_d[0]*diffuse_dot_product;
         fragColor[1] += intensity*f_att*light.color[1]*k_d*O_d[1]*diffuse_dot_product;
@@ -141,14 +141,15 @@ void main() {
         }
 
     }
-    // if (has_texture) {
-    //     fragColor = vec4(UV[0], UV[1], blend, 1);
-    // } else {
-    //     fragColor = vec4(1.f);
-    // }
     if (has_texture) {
-        fragColor = vec4(texture(tex,UV));
+        fragColor = vec4(UV[0], UV[1], 0, 1);
     } else {
         fragColor = vec4(1.f);
     }
+    // if (has_texture) {
+    //     fragColor = vec4(texture(tex,UV));
+    // } else {
+    //     fragColor = vec4(1.f);
+    // }
+    fragColor = texture(tex, UV);
 }
