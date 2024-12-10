@@ -163,6 +163,7 @@ void Realtime::initializeGL() {
     glUseProgram(0);
     glErrorCheck();
 
+
     // Task 11: Fix this "fullscreen" quad's vertex data
     // Task 12: Play around with different values!
     // Task 13: Add UV coordinates
@@ -232,11 +233,15 @@ void Realtime::initializeGeometry() {
         // Enable and define attribute 0 to store vertex positions
         glEnableVertexAttribArray(0);
         glErrorCheck();
-        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(0));
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(0));
         glErrorCheck();
         glEnableVertexAttribArray(1);
         glErrorCheck();
-        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glErrorCheck();
+        glEnableVertexAttribArray(2);
+        glErrorCheck();
+        glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(6 * sizeof(GLfloat)));
         glErrorCheck();
 
         // Clean-up bindings
@@ -270,6 +275,7 @@ void Realtime::makeFBO(){
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glErrorCheck();
+
     // Task 20: Generate and bind a renderbuffer of the right size, set its format, then unbind
     glGenRenderbuffers(1, &m_fbo_renderbuffer);
     glErrorCheck();
@@ -359,7 +365,7 @@ void Realtime::paintGeometry() {
         glBindVertexArray(m_vaos[shapeIndex]);
         glErrorCheck();
 
-        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
+        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
         glErrorCheck();
 
         // Clean-up bindings
@@ -375,7 +381,7 @@ void Realtime::paintGeometry() {
     glErrorCheck();
 }
 
-void Realtime::paintTexture(GLuint texture, bool invert, bool sharpen, bool grayScale, bool blur, bool sepia, bool edgeDetection){
+void Realtime::paintPostprocess(GLuint texture, bool invert, bool sharpen, bool grayScale, bool blur, bool sepia, bool edgeDetection){
     glUseProgram(m_texture_shader);
     // Task 32: Set your bool uniform on whether or not to filter the texture drawn
     glUniform1i(glGetUniformLocation(m_texture_shader, "invert"), invert);
@@ -393,6 +399,27 @@ void Realtime::paintTexture(GLuint texture, bool invert, bool sharpen, bool gray
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
+    glUseProgram(0);
+}
+
+void Realtime::paintTexture() {
+    glUseProgram(m_shader);
+    int num_shapes = m_metaData.shapes.size();
+
+    for (int i=0; i<num_shapes; ++i){
+
+        RenderShapeData &shape = m_metaData.shapes[i];
+        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+        glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+        glBindVertexArray(m_vaos[i]);
+        // Task 10: Bind "texture" to slot 0
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+
+        glDrawArrays(GL_TRIANGLES, 0, 8);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindVertexArray(0);
+    }
     glUseProgram(0);
 }
 
@@ -458,7 +485,8 @@ void Realtime::paintGL() {
     } else {
         edgeDetection = false;
     }
-    paintTexture(m_fbo_texture, invert, sharpen, grayScale, blur, sepia, edgeDetection);
+    paintPostprocess(m_fbo_texture, invert, sharpen, grayScale, blur, sepia, edgeDetection);
+    paintTexture();
 }
 
 void Realtime::resizeGL(int w, int h) {
@@ -633,13 +661,13 @@ void Realtime::sceneChanged() {
             m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
 
             // Task 3: Generate kitten texture
-            glGenTextures(1, &m_fbo_texture);
+            glGenTextures(1, &m_kitten_texture);
 
             // Task 9: Set the active texture slot to texture slot 0
-            glActiveTexture(GL_TEXTURE0);
+            glActiveTexture(GL_TEXTURE1);
 
             // Task 4: Bind kitten texture
-            glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
+            glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
 
             // Task 5: Load image into kitten texture
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
@@ -652,6 +680,13 @@ void Realtime::sceneChanged() {
             glBindTexture(GL_TEXTURE_2D, 0);
         }
     }
+
+    glUseProgram(m_shader);
+    glErrorCheck();
+    glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+    glErrorCheck();
+    glUseProgram(0);
+    glErrorCheck();
 
     update(); // asks for a PaintGL() call to occur
 }

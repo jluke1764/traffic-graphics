@@ -38,7 +38,8 @@ protected:
     void initializeGeometry();
     void makeFBO();
     void paintGeometry();
-    void paintTexture(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
+    void paintPostprocess(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
+    void paintTexture();
     void paintGL() override;          // Called whenever the OpenGL context changes or by an update() request
     void resizeGL(int width, int height) override;      // Called when window size changes
 
@@ -91,6 +92,7 @@ private:
     std::vector<GLuint> m_vbos;
 
     GLuint m_fbo_texture;
+    GLuint m_kitten_texture;
     GLuint m_fbo_renderbuffer;
     GLuint m_fbo;
     GLuint m_defaultFBO;
