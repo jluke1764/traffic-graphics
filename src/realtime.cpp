@@ -154,6 +154,7 @@ void Realtime::initializeGL() {
     // Create fragment shader
     m_texture_shader = ShaderLoader::createShaderProgram(":/resources/shaders/texture.vert", ":/resources/shaders/texture.frag");
     m_shader = ShaderLoader::createShaderProgram(":/resources/shaders/default.vert", ":/resources/shaders/default.frag");
+    m_sky_shader = ShaderLoader::createShaderProgram(":/resources/shaders/skybox.vert", ":/resources/shaders/skybox.frag");
 
     initializeGeometry();
 
@@ -209,7 +210,66 @@ void Realtime::initializeGL() {
     glBindVertexArray(0);
     glErrorCheck();
 
+
+    float cube_size = 2;
+    float v = cube_size / 2;
+
+    std::vector<GLfloat> skybox_data = {
+        // Front face
+        -v, -v,  v,  v, -v,  v,  -v,  v,  v,  // Triangle 1
+         v, -v,  v,  v,  v,  v,  -v,  v,  v,  // Triangle 2
+
+        // Back face
+         v, -v, -v, -v, -v, -v,   v,  v, -v,  // Triangle 1
+        -v, -v, -v, -v,  v, -v,   v,  v, -v,  // Triangle 2
+
+        // Left face
+        -v, -v, -v, -v, -v,  v,  -v,  v, -v,  // Triangle 1
+        -v, -v,  v, -v,  v,  v,  -v,  v, -v,  // Triangle 2
+
+        // Right face
+         v, -v,  v,  v, -v, -v,   v,  v,  v,  // Triangle 1
+         v, -v, -v,  v,  v, -v,   v,  v,  v,  // Triangle 2
+
+        // Top face
+        -v,  v,  v,  v,  v,  v,  -v,  v, -v,  // Triangle 1
+         v,  v,  v,  v,  v, -v,  -v,  v, -v,  // Triangle 2
+
+        // Bottom face
+        -v, -v, -v,  v, -v, -v,  -v, -v,  v,  // Triangle 1
+         v, -v, -v,  v, -v,  v,  -v, -v,  v   // Triangle 2
+    };
+
+    day_sky = Skybox("resources/right.jpg","resources/left.jpg","resources/top.jpg","resources/bottom.jpg","resources/front.jpg","resources/back.jpg", m_sky_shader, GL_TEXTURE3, skybox_data.size()/3);
+    night_sky = Skybox("resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png", m_sky_shader, GL_TEXTURE4, skybox_data.size()/3);
+
+    glGenBuffers(1, &m_skybox_vbo);
+    glErrorCheck();
+    glBindBuffer(GL_ARRAY_BUFFER, m_skybox_vbo);
+    glErrorCheck();
+    glBufferData(GL_ARRAY_BUFFER, skybox_data.size()*sizeof(GLfloat), skybox_data.data(), GL_STATIC_DRAW);
+    glErrorCheck();
+    glGenVertexArrays(1, &m_skybox_vao);
+    glErrorCheck();
+    glBindVertexArray(m_skybox_vao);
+    glErrorCheck();
+
+    glEnableVertexAttribArray(0);
+    glErrorCheck();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+    glErrorCheck();
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glErrorCheck();
+    glBindVertexArray(0);
+    glErrorCheck();
+
     makeFBO();
+
+
+    time_of_day = 12.f;
+    is_night = false;
+
     initialized = true;
 }
 
@@ -305,7 +365,6 @@ void Realtime::makeFBO(){
 }
 
 void Realtime::paintGeometry() {
-
     // Students: anything requiring OpenGL calls every frame should be done here
     // Clear screen color and depth before painting
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -347,6 +406,10 @@ void Realtime::paintGeometry() {
 
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
+
+        glUniform1i(glGetUniformLocation(m_shader,"useFog"), true);
+        glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 10.0);
+        glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 20.0);
 
         glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
         glErrorCheck();
@@ -528,7 +591,19 @@ void Realtime::paintGL() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glErrorCheck();
+
     paintGeometry();
+
+    glm::mat4 cam_trans = glm::mat4(1,0,0,0,
+                                  0,1,0,0,
+                                  0,0,1,0,
+                                  m_metaData.cameraData.pos[0], m_metaData.cameraData.pos[1], m_metaData.cameraData.pos[2], 1);
+
+    if(is_night) {
+        night_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, glm::vec4(1));
+    } else {
+        day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, sun_color);
+    }
 
     // Task 25: Bind the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
@@ -941,7 +1016,6 @@ void Realtime::tileCity() {
     }
 }
 
-
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
@@ -973,6 +1047,8 @@ void Realtime::sceneChanged() {
     glUseProgram(0);
     glErrorCheck();
 
+    setTimeOfDay();
+  
     int num_shapes = m_metaData.shapes.size();
 
     for (int i=0; i<num_shapes; ++i){
@@ -1021,6 +1097,31 @@ void Realtime::sceneChanged() {
     update(); // asks for a PaintGL() call to occur
 }
 
+void Realtime::setTimeOfDay() {
+    float sunrise = 6.f;
+    float sunset = 20.f;
+
+    if(time_of_day > sunset || time_of_day < sunrise) { //night
+        sun_color = glm::vec4(.0, .0, .0, 1);
+        is_night = true;
+    } else {
+        is_night = false;
+        float day_pcnt = (time_of_day - sunrise)/(sunset - sunrise);
+        float angle = glm::radians(180.f * day_pcnt);
+
+        m_metaData.lights[0].dir = glm::vec4(glm::cos(angle), -glm::sin(angle), 0, 0);
+
+        float intensity = 1.f - abs(.5f-day_pcnt);
+        if(day_pcnt > .85f) { // sunset
+            sun_color = glm::vec4(1, .47, .44, 1) * intensity;
+        } else {
+            sun_color = glm::vec4(1, 1, 1, 1) * intensity;
+        }
+    }
+    m_metaData.lights[0].color = sun_color;
+    updateLights();
+}
+
 void Realtime::settingsChanged() {
     if (!initialized) return;
     if (param1 != settings.shapeParameter1 || param2 != settings.shapeParameter2) {
@@ -1034,6 +1135,11 @@ void Realtime::settingsChanged() {
     param2 = settings.shapeParameter2;
     _near = settings.nearPlane;
     _far = settings.farPlane;
+
+    if(time_of_day != settings.sun) {
+        time_of_day = settings.sun;
+        setTimeOfDay();
+    }
 
     update(); // asks for a PaintGL() call to occur
 }
