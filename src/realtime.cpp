@@ -432,6 +432,7 @@ void Realtime::paintGeometry() {
             glErrorCheck();
 
             int j = shape.primitive.material.textureMap.tex;
+            std::cout << "j" << j << std::endl;
 
             // Task 9: Set the active texture slot to texture slot 1
             glActiveTexture(GL_TEXTURE3+j);
@@ -814,6 +815,7 @@ void Realtime::tileCity() {
             whiteColumnFound = true;
             whiteColumnData.primitive.material.textureMap.isUsed = true;
             whiteColumnData.primitive.material.textureMap.tex = rand() % 5;
+            whiteColumnData.primitive.material.blend = 1;
         } else {
             baseBlockShapes.push_back(s);
         }
