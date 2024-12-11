@@ -141,15 +141,15 @@ void main() {
         }
 
     }
-    if (has_texture) {
-        fragColor = vec4(UV[0], UV[1], 0, 1);
-    } else {
-        fragColor = vec4(1.f);
-    }
+    // if (has_texture) {
+    //     fragColor = vec4(UV[0], UV[1], 0, 1);
+    // } else {
+    //     fragColor = vec4(1.f);
+    // }
     // if (has_texture) {
     //     fragColor = vec4(texture(tex,UV));
     // } else {
     //     fragColor = vec4(1.f);
     // }
-    fragColor = texture(tex, UV);
+    // fragColor = texture(tex, UV);
 }

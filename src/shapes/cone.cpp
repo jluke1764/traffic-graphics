@@ -35,52 +35,67 @@ void Cone::makeTile(glm::vec3 topLeft,
     if (isSide) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
     }
     if (isBottom) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
     } else if (isTop) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
+        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
     }
 }
 
@@ -144,26 +159,32 @@ void Cone::makeCap() {
             // Insert first vertex
             insertVec3(m_vertexData, p1);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
             // Insert second vertex
             insertVec3(m_vertexData, p2);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
             // Insert third vertex
             insertVec3(m_vertexData, p3);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
             // Insert first vertex
             insertVec3(m_vertexData, p4);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
             // Insert second vertex
             insertVec3(m_vertexData, p5);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
 
             // Insert third vertex
             insertVec3(m_vertexData, p6);
             insertVec3(m_vertexData, normal);
+            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
         }
     }
 }
@@ -181,4 +202,8 @@ void Cone::insertVec3(std::vector<float> &data, glm::vec3 v) {
     data.push_back(v.x);
     data.push_back(v.y);
     data.push_back(v.z);
+}
+void Cone::insertVec2(std::vector<float> &data, glm::vec2 v) {
+    data.push_back(v.x);
+    data.push_back(v.y);
 }
