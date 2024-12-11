@@ -431,7 +431,7 @@ void Realtime::paintGeometry() {
             glErrorCheck();
 
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE1+i);
+            glActiveTexture(GL_TEXTURE3+i);
             glErrorCheck();
 
             glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
@@ -445,7 +445,7 @@ void Realtime::paintGeometry() {
 
             glUseProgram(m_shader);
             glErrorCheck();
-            glUniform1i(glGetUniformLocation(m_shader, "tex"), 1+i);
+            glUniform1i(glGetUniformLocation(m_shader, "tex"), 3+i);
             glErrorCheck();
         }
 
@@ -1072,7 +1072,7 @@ void Realtime::sceneChanged() {
             glErrorCheck();
 
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE1+i);
+            glActiveTexture(GL_TEXTURE3+i);
             glErrorCheck();
 
             // Task 4: Bind kitten texture
