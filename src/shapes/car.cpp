@@ -153,7 +153,7 @@ void Car::drive(float steeringAngleDegrees, float speed) {
     m_wheelBL.ctm = m_translateBL*m_rotateWheelLeft*rollingRotation*m_scaleWheel;
     m_wheelBR.ctm = m_translateBR*m_rotateWheelLeft*rollingRotation*m_scaleWheel;
 
-    printPosition();
+    // printPosition();
 
 }
 
@@ -170,7 +170,7 @@ glm::vec3 Car::getPosition() {
 //this controls what the car will do at a given timestep
 void Car::update(int time) {
 
-    float posError = 0.1; //must have error
+    float posError = 1; //must have error
     float dirError = .5;
 
     //restore angles to proper ranges
@@ -202,7 +202,7 @@ void Car::update(int time) {
         if (fabs(angleDiff) > dirError) {
 
             if (fabs(m_steeringAngle) < m_maxSteeringAngle) {
-                m_steeringSpeed = 2*1/m_speed;
+                m_steeringSpeed = 5*1/m_speed;
                 if (angleDiff > 0) {
                     m_steeringAngle += glm::radians(m_steeringSpeed);
 
@@ -216,6 +216,7 @@ void Car::update(int time) {
             m_steeringAngle = 0;
         }
         std::cout << "steering angle: " << glm::degrees(m_steeringAngle) << std::endl;
+        std::cout << "angleDiff: " << glm::degrees(angleDiff) << std::endl;
 
         drive(glm::degrees(m_steeringAngle), m_speed);
 
