@@ -33,6 +33,8 @@ uniform vec4 O_d;
 uniform vec4 O_s;
 
 uniform bool useFog;
+uniform float fogStart;
+uniform float fogEnd;
 
 
 uniform float shininess;
@@ -50,8 +52,8 @@ uniform Light[10] lights;
 //need to figure out how to pass these in
 
 float getFogAmt(float fog_coord) {
-    float start = 2.0;
-    float end = 5.0;
+    float start = fogStart;
+    float end = fogEnd;
 
     float r = (end - fog_coord) / (end - start);
 

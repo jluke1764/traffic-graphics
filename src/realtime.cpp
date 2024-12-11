@@ -151,6 +151,7 @@ void Realtime::initializeGL() {
     // Create fragment shader
     m_texture_shader = ShaderLoader::createShaderProgram(":/resources/shaders/texture.vert", ":/resources/shaders/texture.frag");
     m_shader = ShaderLoader::createShaderProgram(":/resources/shaders/default.vert", ":/resources/shaders/default.frag");
+    m_sky_shader = ShaderLoader::createShaderProgram(":/resources/shaders/skybox.vert", ":/resources/shaders/skybox.frag");
 
     initializeGeometry();
 
@@ -199,6 +200,60 @@ void Realtime::initializeGL() {
     glErrorCheck();
 
     // Unbind the fullscreen quad's VBO and VAO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glErrorCheck();
+    glBindVertexArray(0);
+    glErrorCheck();
+
+
+    float cube_size = 2;
+    float v = cube_size / 2;
+
+    std::vector<GLfloat> skybox_data = {
+        // Front face
+        -v, -v,  v,  v, -v,  v,  -v,  v,  v,  // Triangle 1
+         v, -v,  v,  v,  v,  v,  -v,  v,  v,  // Triangle 2
+
+        // Back face
+         v, -v, -v, -v, -v, -v,   v,  v, -v,  // Triangle 1
+        -v, -v, -v, -v,  v, -v,   v,  v, -v,  // Triangle 2
+
+        // Left face
+        -v, -v, -v, -v, -v,  v,  -v,  v, -v,  // Triangle 1
+        -v, -v,  v, -v,  v,  v,  -v,  v, -v,  // Triangle 2
+
+        // Right face
+         v, -v,  v,  v, -v, -v,   v,  v,  v,  // Triangle 1
+         v, -v, -v,  v,  v, -v,   v,  v,  v,  // Triangle 2
+
+        // Top face
+        -v,  v,  v,  v,  v,  v,  -v,  v, -v,  // Triangle 1
+         v,  v,  v,  v,  v, -v,  -v,  v, -v,  // Triangle 2
+
+        // Bottom face
+        -v, -v, -v,  v, -v, -v,  -v, -v,  v,  // Triangle 1
+         v, -v, -v,  v, -v,  v,  -v, -v,  v   // Triangle 2
+    };
+
+    day_sky = Skybox("resources/right.jpg","resources/left.jpg","resources/top.jpg","resources/bottom.jpg","resources/front.jpg","resources/back.jpg", m_sky_shader, GL_TEXTURE3, skybox_data.size()/3);
+    //night_sky = Skybox("resources/test.png","resources/test.png","resources/test.png","resources/test.png","resources/test.png","resources/test.png", m_sky_shader, GL_TEXTURE4, skybox_data.size()/3);
+
+    glGenBuffers(1, &m_skybox_vbo);
+    glErrorCheck();
+    glBindBuffer(GL_ARRAY_BUFFER, m_skybox_vbo);
+    glErrorCheck();
+    glBufferData(GL_ARRAY_BUFFER, skybox_data.size()*sizeof(GLfloat), skybox_data.data(), GL_STATIC_DRAW);
+    glErrorCheck();
+    glGenVertexArrays(1, &m_skybox_vao);
+    glErrorCheck();
+    glBindVertexArray(m_skybox_vao);
+    glErrorCheck();
+
+    glEnableVertexAttribArray(0);
+    glErrorCheck();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+    glErrorCheck();
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glErrorCheck();
     glBindVertexArray(0);
@@ -339,7 +394,9 @@ void Realtime::paintGeometry() {
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
 
-        glUniform1i(glGetUniformLocation(m_shader,"useFog"), false);
+        glUniform1i(glGetUniformLocation(m_shader,"useFog"), true);
+        glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 9.0);
+        glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 10.0);
 
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
@@ -409,6 +466,13 @@ void Realtime::paintGL() {
     glErrorCheck();
 
     paintGeometry();
+
+    glm::mat4 cam_trans = glm::mat4(1,0,0,0,
+                                  0,1,0,0,
+                                  0,0,1,0,
+                                  m_metaData.cameraData.pos[0], m_metaData.cameraData.pos[1], m_metaData.cameraData.pos[2], 1);
+
+    day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao);
 
     // Task 25: Bind the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
