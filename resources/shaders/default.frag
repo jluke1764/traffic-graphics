@@ -83,9 +83,12 @@ void main() {
     // }
 
     //add ambient term
-    fragColor[0] += k_a*O_a[0];
-    fragColor[1] += k_a*O_a[1];
-    fragColor[2] += k_a*O_a[2];
+    if (has_texture) {
+        vec4 texture = texture(tex, UV);
+        fragColor += (blend*texture*k_a+(1-blend)*k_a*O_a);
+    } else {
+        fragColor += k_a*O_a;
+    }
 
     // loop through the lights
     for(int i=0; i<num_lights; i++) {
