@@ -7,6 +7,23 @@ void Sphere::updateParams(int param1, int param2) {
     makeSphere();
 }
 
+glm::vec2 Sphere::getUV(float x, float y, float z) {
+    float u;
+    float v;
+    float theta = atan2(z,x);
+    if (theta < 0) {
+        u = -theta/(2*M_PI);
+    } else if (theta > 0) {
+        u = 1-theta/(2*M_PI);
+    }
+    float phi = asin(y/0.5);
+    v = phi/M_PI + 0.5;
+    if (v==0 or v==1) {
+        u = 0.5;
+    }
+    return glm::vec2(u,v);
+}
+
 void Sphere::makeTile(glm::vec3 topLeft,
                       glm::vec3 topRight,
                       glm::vec3 bottomLeft,
@@ -14,30 +31,29 @@ void Sphere::makeTile(glm::vec3 topLeft,
     // Task 5: Implement the makeTile() function for a Sphere
     // Note: this function is very similar to the makeTile() function for Cube,
     //       but the normals are calculated in a different way!
-
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, glm::normalize(topLeft));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(topLeft.x, topLeft.y, topLeft.z));
 
     insertVec3(m_vertexData, bottomLeft);
     insertVec3(m_vertexData, glm::normalize(bottomLeft));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(bottomLeft.x, bottomLeft.y, bottomLeft.z));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, glm::normalize(bottomRight));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(bottomRight.x, bottomRight.y, bottomRight.z));
 
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, glm::normalize(topLeft));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(topLeft.x, topLeft.y, topLeft.z));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, glm::normalize(bottomRight));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(bottomRight.x, bottomRight.y, bottomRight.z));
 
     insertVec3(m_vertexData, topRight);
     insertVec3(m_vertexData, glm::normalize(topRight));
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, getUV(topRight.x, topRight.y, topRight.z));
 }
 
 void Sphere::makeWedge(float currentTheta, float nextTheta) {

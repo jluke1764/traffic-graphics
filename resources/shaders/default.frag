@@ -123,10 +123,6 @@ void main() {
             fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
         }
 
-        fragColor[0] += intensity*f_att*light.color[0]*k_d*O_d[0]*diffuse_dot_product;
-        fragColor[1] += intensity*f_att*light.color[1]*k_d*O_d[1]*diffuse_dot_product;
-        fragColor[2] += intensity*f_att*light.color[2]*k_d*O_d[2]*diffuse_dot_product;
-
         //add specular term
         vec3 R = reflect(-directionToLight, normal);
         R = normalize(R);
@@ -151,5 +147,5 @@ void main() {
     // } else {
     //     fragColor = vec4(1.f);
     // }
-    fragColor = texture(tex, UV);
+    // fragColor = texture(tex, UV);
 }

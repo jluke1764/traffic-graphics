@@ -10,6 +10,7 @@ public:
         updateParams(param1, param2);
     }
     void updateParams(int param1, int param2);
+    glm::vec2 getUV(float x, float y, float z);
     std::vector<float> generateShape() { return m_vertexData; }
 
 private:

@@ -349,6 +349,11 @@ void Realtime::paintGeometry() {
 
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
+
+        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+        glErrorCheck();
+        glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+        glErrorCheck();
         std::cout <<"here4" <<std::endl;
 
         int shapeIndex = m_sphereIndex;
