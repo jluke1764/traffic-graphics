@@ -13,11 +13,10 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     // "specular": [1.0, 1.0, 1.0],
     // "shininess": 15.0
 
-    glm::mat4 overallScale = glm::scale(glm::mat4(1.0), glm::vec3(m_scaleFactor));
     m_position = startingPosition;
     m_directionAngle = glm::radians(startingDirectionAngle);
 
-    SceneMaterial bodyMaterial = SceneMaterial{.cAmbient = {0.5*color.r, 0.5*color.g, 0.5*color.b, 1},
+    SceneMaterial bodyMaterial = SceneMaterial{.cAmbient = {1*color.r, 1*color.g, 1*color.b, 1},
                                            .cDiffuse = {0.7*color.r, 0.7*color.g, 0.7*color.b, 1},
                                            .cSpecular = {1.0, 1.0, 1.0, 1},
                                            .shininess = 15.0};
@@ -26,7 +25,7 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
                                               .material = bodyMaterial};
 
     //car space
-    m_scaleBody = glm::scale(glm::mat4(1.0), {2.0, 1, 4.0})*overallScale;
+    m_scaleBody = glm::scale(glm::mat4(1.0), {2.0, 1, 4.0});
     m_translateBody = glm::translate(glm::mat4(1.0), {0, 0.5, 0});
 
     m_body = RenderShapeData{.primitive = body,
@@ -40,7 +39,7 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     ScenePrimitive wheel = ScenePrimitive{.type = PrimitiveType::PRIMITIVE_CYLINDER,
                                           .material = wheelMaterial};
 
-    m_scaleWheel = glm::scale(glm::mat4(1.0), {0.7, 0.25, 0.7})*overallScale;
+    m_scaleWheel = glm::scale(glm::mat4(1.0), {0.7, 0.25, 0.7});
 
     m_rotateWheelLeft = glm::rotate(glm::mat4(1.0), glm::radians(90.0f), {0, 0, 1});
     m_rotateWheelRight = glm::rotate(glm::mat4(1.0), glm::radians(-90.0f), {0, 0, 1});
@@ -79,9 +78,11 @@ std::vector<RenderShapeData> Car::getShapeData() {
     ret.clear();
     //world space
 
+    glm::mat4 overallScale = glm::scale(glm::mat4(1.0), glm::vec3(m_scaleFactor));
+
     glm::mat4 rotateCar = glm::rotate(glm::mat4(1.0), m_directionAngle, glm::vec3(0, 1, 0));
     glm::mat4 translateCar = glm::translate(glm::mat4(1.0), m_position);
-    glm::mat4 carCTM = translateCar * rotateCar;
+    glm::mat4 carCTM = translateCar * rotateCar*overallScale;
 
     // printMatrix4x4(m_body.ctm);
 

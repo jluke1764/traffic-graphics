@@ -43,7 +43,7 @@ public:
 
 
 private:
-    float m_scaleFactor = 1; //scale according to rest of scene (block is 1)
+    float m_scaleFactor = 0.25; //scale according to rest of scene (block is 1)
 
 
     glm::vec3 m_position = glm::vec3(0.0);

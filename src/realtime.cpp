@@ -317,7 +317,6 @@ void Realtime::initializeGeometry() {
     initialized = true;
 
     m_trafficScene = TrafficScene();
-    std::cout << "num car shapes: " << m_trafficScene.getShapes().size() << std::endl;
     // makeFBO();
     // initialized = true;
 
@@ -479,59 +478,59 @@ void Realtime::paintGeometry() {
         glErrorCheck();
     }
 
-    for (int i=0; i<m_trafficScene.getShapes().size(); ++i){
+    // for (int i=0; i<m_trafficScene.getShapes().size(); ++i){
 
-        RenderShapeData &shape = m_trafficScene.getShapes()[i];
+    //     RenderShapeData &shape = m_trafficScene.getShapes()[i];
 
-        glm::mat4 model = shape.ctm;
+    //     glm::mat4 model = shape.ctm;
 
-        glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_matrix"), 1, GL_FALSE, &shape.ctm[0][0]);
-        glErrorCheck();
+    //     glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_matrix"), 1, GL_FALSE, &shape.ctm[0][0]);
+    //     glErrorCheck();
 
-        glm::mat3 it_model_matrix = glm::mat3(glm::inverse(glm::transpose(model)));
+    //     glm::mat3 it_model_matrix = glm::mat3(glm::inverse(glm::transpose(model)));
 
-        glUniformMatrix3fv(glGetUniformLocation(m_shader, "it_model_matrix"), 1, GL_FALSE, &it_model_matrix[0][0]);
-        glErrorCheck();
+    //     glUniformMatrix3fv(glGetUniformLocation(m_shader, "it_model_matrix"), 1, GL_FALSE, &it_model_matrix[0][0]);
+    //     glErrorCheck();
 
 
-        glUniform4fv(glGetUniformLocation(m_shader,"O_a"),1, &shape.primitive.material.cAmbient[0]);
-        glErrorCheck();
-        glUniform4fv(glGetUniformLocation(m_shader,"O_d"),1, &shape.primitive.material.cDiffuse[0]);
-        glErrorCheck();
-        glUniform4fv(glGetUniformLocation(m_shader,"O_s"),1, &shape.primitive.material.cSpecular[0]);
-        glErrorCheck();
+    //     glUniform4fv(glGetUniformLocation(m_shader,"O_a"),1, &shape.primitive.material.cAmbient[0]);
+    //     glErrorCheck();
+    //     glUniform4fv(glGetUniformLocation(m_shader,"O_d"),1, &shape.primitive.material.cDiffuse[0]);
+    //     glErrorCheck();
+    //     glUniform4fv(glGetUniformLocation(m_shader,"O_s"),1, &shape.primitive.material.cSpecular[0]);
+    //     glErrorCheck();
 
-        glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
-        glErrorCheck();
+    //     glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
+    //     glErrorCheck();
 
-        int shapeIndex = m_sphereIndex;
-        if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
-            shapeIndex = m_sphereIndex;
-        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CUBE) {
-            shapeIndex = m_cubeIndex;
-        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CYLINDER) {
-            shapeIndex = m_cylinderIndex;
-        } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
-            shapeIndex = m_coneIndex;
-        }
+    //     int shapeIndex = m_sphereIndex;
+    //     if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
+    //         shapeIndex = m_sphereIndex;
+    //     } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CUBE) {
+    //         shapeIndex = m_cubeIndex;
+    //     } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CYLINDER) {
+    //         shapeIndex = m_cylinderIndex;
+    //     } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
+    //         shapeIndex = m_coneIndex;
+    //     }
 
-        // Bind the vbo and vao
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
-        glErrorCheck();
+    //     // Bind the vbo and vao
+    //     glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
+    //     glErrorCheck();
 
-        glBindVertexArray(m_vaos[shapeIndex]);
-        glErrorCheck();
+    //     glBindVertexArray(m_vaos[shapeIndex]);
+    //     glErrorCheck();
 
-        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
-        glErrorCheck();
+    //     glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
+    //     glErrorCheck();
 
-        // Clean-up bindings
-        glBindVertexArray(0);
-        glErrorCheck();
+    //     // Clean-up bindings
+    //     glBindVertexArray(0);
+    //     glErrorCheck();
 
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        glErrorCheck();
-    }
+    //     glBindBuffer(GL_ARRAY_BUFFER,0);
+    //     glErrorCheck();
+    // }
 
     // Task 3: deactivate the shader program by passing 0 into glUseProgram
     glUseProgram(0);
@@ -1083,7 +1082,8 @@ void Realtime::sceneChanged() {
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
 
-    tileCity();
+    // tileCity();
+    m_trafficScene.getShapes(m_metaData.shapes);
 
     Realtime::updateLights();
     glErrorCheck();

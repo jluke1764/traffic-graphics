@@ -24,11 +24,12 @@ TrafficScene::TrafficScene() {
 
 }
 
-std::vector<RenderShapeData>& TrafficScene::getShapes() {
+std::vector<RenderShapeData>& TrafficScene::getShapes(std::vector<RenderShapeData> &metaData) {
     m_shapes.clear();
     for (Car* car : m_cars) {
         for (RenderShapeData& shape : car->getShapeData()) {
             m_shapes.push_back(shape);
+            metaData.push_back(shape);
         }
     }
 
