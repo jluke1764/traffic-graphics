@@ -236,7 +236,7 @@ void Realtime::initializeGL() {
     };
 
     day_sky = Skybox("resources/right.jpg","resources/left.jpg","resources/top.jpg","resources/bottom.jpg","resources/front.jpg","resources/back.jpg", m_sky_shader, GL_TEXTURE3, skybox_data.size()/3);
-    //night_sky = Skybox("resources/test.png","resources/test.png","resources/test.png","resources/test.png","resources/test.png","resources/test.png", m_sky_shader, GL_TEXTURE4, skybox_data.size()/3);
+    night_sky = Skybox("resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png", m_sky_shader, GL_TEXTURE4, skybox_data.size()/3);
 
     glGenBuffers(1, &m_skybox_vbo);
     glErrorCheck();
@@ -260,6 +260,11 @@ void Realtime::initializeGL() {
     glErrorCheck();
 
     makeFBO();
+
+
+    time_of_day = 12.f;
+    is_night = false;
+
     initialized = true;
 }
 
@@ -472,7 +477,11 @@ void Realtime::paintGL() {
                                   0,0,1,0,
                                   m_metaData.cameraData.pos[0], m_metaData.cameraData.pos[1], m_metaData.cameraData.pos[2], 1);
 
-    day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, sun_color);
+    if(is_night) {
+        night_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, glm::vec4(1));
+    } else {
+        day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, sun_color);
+    }
 
     // Task 25: Bind the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
@@ -679,7 +688,6 @@ void Realtime::sceneChanged() {
     glUseProgram(0);
     glErrorCheck();
 
-    time_of_day = 12.f;
     setTimeOfDay();
 
     update(); // asks for a PaintGL() call to occur
@@ -691,7 +699,9 @@ void Realtime::setTimeOfDay() {
 
     if(time_of_day > sunset || time_of_day < sunrise) { //night
         sun_color = glm::vec4(.0, .0, .0, 1);
+        is_night = true;
     } else {
+        is_night = false;
         float day_pcnt = (time_of_day - sunrise)/(sunset - sunrise);
         float angle = glm::radians(180.f * day_pcnt);
 

@@ -62,9 +62,6 @@ Skybox::Skybox(const std::string& positive_x_path,
         glErrorCheck();
     }
 
-    glUseProgram(shader);
-    glUniform1i(glGetUniformLocation(shader, "cube_tex"), texture_slot - GL_TEXTURE0);
-    glErrorCheck();
     glUseProgram(0);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -83,6 +80,8 @@ void Skybox::Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindVertexArray(vao);
     glErrorCheck();
+
+    glUniform1i(glGetUniformLocation(shader_program, "cube_tex"), m_slot - GL_TEXTURE0);
 
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "mvp"), 1, GL_FALSE, &mvp[0][0]);
     glErrorCheck();

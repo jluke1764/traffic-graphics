@@ -138,4 +138,5 @@ private:
     Skybox day_sky;
     Skybox night_sky;
     glm::vec4 sun_color;
+    bool is_night;
 };
