@@ -94,6 +94,7 @@ struct SceneFileMap {
 
     float repeatU;
     float repeatV;
+    int tex;
 
     void clear()
     {
