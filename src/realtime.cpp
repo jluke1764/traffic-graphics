@@ -350,8 +350,6 @@ void Realtime::paintGeometry() {
 
         glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
         glErrorCheck();
-        glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
-        glErrorCheck();
 
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
@@ -363,23 +361,30 @@ void Realtime::paintGeometry() {
         } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
             shapeIndex = m_coneIndex;
         }
-        // Task 9: Set the active texture slot to texture slot 1
-        glActiveTexture(GL_TEXTURE1+i);
-        glErrorCheck();
 
-        glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
-        glErrorCheck();
+        if (shape.primitive.material.textureMap.isUsed) {
 
-        // Task 6: Set min and mag filters' interpolation mode to linear
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glErrorCheck();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glErrorCheck();
+            glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+            glErrorCheck();
 
-        glUseProgram(m_shader);
-        glErrorCheck();
-        glUniform1i(glGetUniformLocation(m_shader, "tex"), 1+i);
-        glErrorCheck();
+            // Task 9: Set the active texture slot to texture slot 1
+            glActiveTexture(GL_TEXTURE1+i);
+            glErrorCheck();
+
+            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
+            glErrorCheck();
+
+            // Task 6: Set min and mag filters' interpolation mode to linear
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glErrorCheck();
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glErrorCheck();
+
+            glUseProgram(m_shader);
+            glErrorCheck();
+            glUniform1i(glGetUniformLocation(m_shader, "tex"), 1+i);
+            glErrorCheck();
+        }
 
         // Bind the vbo and vao
         glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
