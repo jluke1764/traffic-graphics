@@ -9,7 +9,8 @@ void Cube::updateParams(int param1) {
 void Cube::makeTile(glm::vec3 topLeft,
                     glm::vec3 topRight,
                     glm::vec3 bottomLeft,
-                    glm::vec3 bottomRight) {
+                    glm::vec3 bottomRight,
+                    int i, int j) {
     // Task 2: create a tile (i.e. 2 triangles) based on 4 given points.
     glm::vec3 normal1 = glm::normalize(glm::cross(bottomLeft-topLeft, bottomRight-topLeft));
     glm::vec3 normal2 = glm::normalize(glm::cross(bottomRight-topLeft, topRight-topLeft));
@@ -59,7 +60,7 @@ void Cube::makeFace(glm::vec3 topLeft,
             glm::vec3 BL = TL + y_distance;
             glm::vec3 BR = BL + x_distance;
 
-            makeTile(TL, TR, BL, BR);
+            makeTile(TL, TR, BL, BR, i, j);
         }
     }
 }

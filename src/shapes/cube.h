@@ -19,7 +19,8 @@ private:
     void makeTile(glm::vec3 topLeft,
                   glm::vec3 topRight,
                   glm::vec3 bottomLeft,
-                  glm::vec3 bottomRight);
+                  glm::vec3 bottomRight,
+                  int i, int j);
     void makeFace(glm::vec3 topLeft,
                   glm::vec3 topRight,
                   glm::vec3 bottomLeft,

@@ -362,6 +362,23 @@ void Realtime::paintGeometry() {
             shapeIndex = m_coneIndex;
         }
         std::cout <<"here5" <<std::endl;
+        // Task 9: Set the active texture slot to texture slot 1
+        glActiveTexture(GL_TEXTURE1);
+        glErrorCheck();
+
+        glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+        glErrorCheck();
+
+        // Task 6: Set min and mag filters' interpolation mode to linear
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glErrorCheck();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glErrorCheck();
+
+        glUseProgram(m_shader);
+        glErrorCheck();
+        glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+        glErrorCheck();
 
         // Bind the vbo and vao
         glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
@@ -385,6 +402,9 @@ void Realtime::paintGeometry() {
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glErrorCheck();
         std::cout <<"here10" <<std::endl;
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glErrorCheck();
     }
 
     // Task 3: deactivate the shader program by passing 0 into glUseProgram
@@ -423,38 +443,80 @@ void Realtime::paintPostprocess(GLuint texture, bool invert, bool sharpen, bool 
     glErrorCheck();
 }
 
-void Realtime::paintTexture() {
-    glUseProgram(m_shader);
-    glErrorCheck();
-    int num_shapes = m_metaData.shapes.size();
+// void Realtime::paintTexture() {
+//     glUseProgram(m_shader);
+//     glErrorCheck();
+//     int num_shapes = m_metaData.shapes.size();
 
-    for (int i=0; i<num_shapes; ++i){
+//     for (int i=0; i<num_shapes; ++i){
 
-        RenderShapeData &shape = m_metaData.shapes[i];
-        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
-        glErrorCheck();
-        glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
-        glErrorCheck();
-        glBindVertexArray(m_vaos[i]);
-        glErrorCheck();
-        // Task 10: Bind "texture" to slot 1
-        if (shape.primitive.material.textureMap.isUsed) {
-            glActiveTexture(GL_TEXTURE1);
-            glErrorCheck();
-            glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
-            glErrorCheck();
+//         RenderShapeData &shape = m_metaData.shapes[i];
+//         glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+//         glErrorCheck();
+//         glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+//         glErrorCheck();
+//         // Task 10: Bind "texture" to slot 1
+//         if (shape.primitive.material.textureMap.isUsed) {
+//             glActiveTexture(GL_TEXTURE1);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+//             glErrorCheck();
 
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            glErrorCheck();
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glErrorCheck();
-        }
-        glBindVertexArray(0);
-        glErrorCheck();
-    }
-    glUseProgram(0);
-    glErrorCheck();
-}
+//             // Task 3: Generate kitten texture
+//             glGenTextures(1, &m_kitten_texture);
+//             glErrorCheck();
+
+//             // Task 9: Set the active texture slot to texture slot 1
+//             glActiveTexture(GL_TEXTURE1);
+//             glErrorCheck();
+
+//             // Task 4: Bind kitten texture
+//             glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+//             glErrorCheck();
+
+//             // Task 5: Load image into kitten texture
+//             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+//             glErrorCheck();
+
+//             // Task 6: Set min and mag filters' interpolation mode to linear
+//             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//             glErrorCheck();
+//             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//             glErrorCheck();
+
+//             glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+//             glErrorCheck();
+
+//             glBindVertexArray(m_vaos[i]);
+//             glErrorCheck();
+
+//             int shapeIndex = m_sphereIndex;
+//             if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
+//                 shapeIndex = m_sphereIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CUBE) {
+//                 shapeIndex = m_cubeIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CYLINDER) {
+//                 shapeIndex = m_cylinderIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
+//                 shapeIndex = m_coneIndex;
+//             }
+
+//             glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
+//             glErrorCheck();
+
+
+//             glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, 0);
+//             glErrorCheck();
+
+//             glBindVertexArray(0);
+//             glErrorCheck();
+//         }
+//     }
+//     glUseProgram(0);
+//     glErrorCheck();
+// }
 
 void Realtime::paintGL() {
     // Task 24: Bind our FBO
@@ -518,8 +580,8 @@ void Realtime::paintGL() {
     } else {
         edgeDetection = false;
     }
+    // paintTexture();
     paintPostprocess(m_fbo_texture, invert, sharpen, grayScale, blur, sepia, edgeDetection);
-    paintTexture();
 }
 
 void Realtime::resizeGL(int w, int h) {
@@ -709,18 +771,19 @@ void Realtime::sceneChanged() {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
             glErrorCheck();
 
-            // Task 6: Set min and mag filters' interpolation mode to linear
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glErrorCheck();
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glErrorCheck();
+            // // Task 6: Set min and mag filters' interpolation mode to linear
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            // glErrorCheck();
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            // glErrorCheck();
 
-            glUseProgram(m_shader);
-            glErrorCheck();
-            glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
-            glErrorCheck();
+            // glUseProgram(m_shader);
+            // glErrorCheck();
+            // glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+            // glErrorCheck();
 
             // Task 7: Unbind kitten texture
+
             glBindTexture(GL_TEXTURE_2D, 0);
             glErrorCheck();
 
