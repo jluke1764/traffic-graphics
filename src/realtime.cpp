@@ -432,7 +432,6 @@ void Realtime::paintGeometry() {
             glErrorCheck();
 
             int j = shape.primitive.material.textureMap.tex;
-            std::cout << "j" << j << std::endl;
 
             // Task 9: Set the active texture slot to texture slot 1
             glActiveTexture(GL_TEXTURE3+j);
@@ -985,6 +984,9 @@ void Realtime::tileCity() {
                         building.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
                         building.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
                         building.primitive.material.shininess = 10.f;
+                        building.primitive.material.textureMap.isUsed = true;
+                        building.primitive.material.textureMap.tex = rand() % 5;
+                        building.primitive.material.blend = 1;
 
                         glm::mat4 buildingTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
                                                       * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
