@@ -780,17 +780,6 @@ void Realtime::sceneChanged() {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
             glErrorCheck();
 
-            // // Task 6: Set min and mag filters' interpolation mode to linear
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            // glErrorCheck();
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            // glErrorCheck();
-
-            // glUseProgram(m_shader);
-            // glErrorCheck();
-            // glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
-            // glErrorCheck();
-
             // Task 7: Unbind kitten texture
 
             glBindTexture(GL_TEXTURE_2D, 0);
