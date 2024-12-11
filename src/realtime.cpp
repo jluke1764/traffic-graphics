@@ -915,6 +915,9 @@ void Realtime::tileCity() {
                 empireBuilding.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
                 empireBuilding.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
                 empireBuilding.primitive.material.shininess = 10.f;
+                empireBuilding.primitive.material.textureMap.isUsed = true;
+                empireBuilding.primitive.material.textureMap.tex = rand() % 5;
+                empireBuilding.primitive.material.blend = 1;
 
                 glm::mat4 empireTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
                                             * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
