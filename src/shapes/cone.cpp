@@ -13,7 +13,7 @@ glm::vec2 Cone::getUV(glm::vec3 point) {
     float x = point.x;
     float y = point.y;
     float z = point.z;
-    if ((y+0.5)<0) {
+    if (y==-0.5) { //base
         u = x+0.5;
         v = z+0.5;
     } else {

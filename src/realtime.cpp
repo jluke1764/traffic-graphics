@@ -128,7 +128,6 @@ void Realtime::initializeGL() {
 
     m_timer = startTimer(1000/60);
     m_elapsedTimer.start();
-    glClearColor(0.5f,0.5f,0.f,1.f);
 
     // Initializing GL.
     // GLEW (GL Extension Wrangler) provides access to OpenGL functions.
