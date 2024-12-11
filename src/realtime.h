@@ -38,7 +38,8 @@ protected:
     void initializeGeometry();
     void makeFBO();
     void paintGeometry();
-    void paintTexture(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
+    void paintPostprocess(GLuint texture, bool perPixel, bool kernel, bool grayScale, bool blur, bool sepia, bool edgeDetection);
+    void paintTexture();
     void paintGL() override;          // Called whenever the OpenGL context changes or by an update() request
     void resizeGL(int width, int height) override;      // Called when window size changes
 
@@ -57,7 +58,7 @@ private:
     void updateVBOS();
     void tesselateShapes();
     void updateLights();
-    void tileCity();
+    // void tileCity();
 
     struct Light {
         int type;
@@ -91,9 +92,13 @@ private:
     std::vector<GLuint> m_vbos;
 
     GLuint m_fbo_texture;
+    std::vector<GLuint> m_kitten_textures = std::vector<GLuint>(100);
     GLuint m_fbo_renderbuffer;
     GLuint m_fbo;
     GLuint m_defaultFBO;
+
+    QImage m_image;
+
     int m_fbo_width;
     int m_fbo_height;
 

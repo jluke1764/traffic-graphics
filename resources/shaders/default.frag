@@ -18,6 +18,7 @@ struct Light {
 //         received post-interpolation from the vertex shader
 in vec4 worldSpacePosition;
 in vec3 worldSpaceNormal;
+in vec2 UV;
 
 // Task 10: declare an out vec4 for your output color
 out vec4 fragColor;
@@ -38,13 +39,10 @@ uniform vec4 cameraPosition;
 uniform int num_lights;
 uniform Light[10] lights;
 
-// uniform float Oa;
-// uniform float Od;
-// uniform float Os;
+uniform bool has_texture;
+uniform float blend;
+uniform sampler2D tex;
 
-// uniform vec4 directionToCamera;
-
-//need to figure out how to pass these in
 
 void main() {
     // Remember that you need to renormalize vectors here if you want them to be normalized
@@ -116,9 +114,14 @@ void main() {
         if (diffuse_dot_product<0) {
             diffuse_dot_product = 0.f;
         }
-        fragColor[0] += intensity*f_att*light.color[0]*k_d*O_d[0]*diffuse_dot_product;
-        fragColor[1] += intensity*f_att*light.color[1]*k_d*O_d[1]*diffuse_dot_product;
-        fragColor[2] += intensity*f_att*light.color[2]*k_d*O_d[2]*diffuse_dot_product;
+
+        //texture mapping
+        if (has_texture) {
+            vec4 texture = texture(tex, UV);
+            fragColor += intensity*f_att*light.color*(blend*texture+(1-blend)*O_d*k_d)*diffuse_dot_product;
+        } else {
+            fragColor += intensity*f_att*light.color*k_d*O_d*diffuse_dot_product;
+        }
 
         //add specular term
         vec3 R = reflect(-directionToLight, normal);
