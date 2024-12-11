@@ -303,6 +303,7 @@ void Realtime::makeFBO(){
 }
 
 void Realtime::paintGeometry() {
+    std::cout <<"begin paint" <<std::endl;
 
     // Students: anything requiring OpenGL calls every frame should be done here
     // Clear screen color and depth before painting
@@ -318,6 +319,7 @@ void Realtime::paintGeometry() {
     glErrorCheck();
     glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_proj"), 1, GL_FALSE, &m_proj[0][0]);
     glErrorCheck();
+    std::cout <<"here1" <<std::endl;
 
     int num_shapes = m_metaData.shapes.size();
 
@@ -326,6 +328,7 @@ void Realtime::paintGeometry() {
         RenderShapeData &shape = m_metaData.shapes[i];
 
         glm::mat4 model = shape.ctm;
+        std::cout <<"here2" <<std::endl;
 
         glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_matrix"), 1, GL_FALSE, &shape.ctm[0][0]);
         glErrorCheck();
@@ -334,6 +337,7 @@ void Realtime::paintGeometry() {
 
         glUniformMatrix3fv(glGetUniformLocation(m_shader, "it_model_matrix"), 1, GL_FALSE, &it_model_matrix[0][0]);
         glErrorCheck();
+        std::cout <<"here3" <<std::endl;
 
 
         glUniform4fv(glGetUniformLocation(m_shader,"O_a"),1, &shape.primitive.material.cAmbient[0]);
@@ -345,6 +349,7 @@ void Realtime::paintGeometry() {
 
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
+        std::cout <<"here4" <<std::endl;
 
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
@@ -356,28 +361,36 @@ void Realtime::paintGeometry() {
         } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
             shapeIndex = m_coneIndex;
         }
+        std::cout <<"here5" <<std::endl;
 
         // Bind the vbo and vao
         glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
         glErrorCheck();
+        std::cout <<"here6" <<std::endl;
 
         glBindVertexArray(m_vaos[shapeIndex]);
         glErrorCheck();
+        std::cout <<"here7" <<std::endl;
 
         glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
         glErrorCheck();
+        std::cout <<"here8" <<std::endl;
+
 
         // Clean-up bindings
         glBindVertexArray(0);
         glErrorCheck();
+        std::cout <<"here9" <<std::endl;
 
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glErrorCheck();
+        std::cout <<"here10" <<std::endl;
     }
 
     // Task 3: deactivate the shader program by passing 0 into glUseProgram
     glUseProgram(0);
     glErrorCheck();
+    std::cout <<"end paint" <<std::endl;
 }
 
 void Realtime::paintPostprocess(GLuint texture, bool invert, bool sharpen, bool grayScale, bool blur, bool sepia, bool edgeDetection){
@@ -424,7 +437,7 @@ void Realtime::paintTexture() {
         glErrorCheck();
         glBindVertexArray(m_vaos[i]);
         glErrorCheck();
-        // Task 10: Bind "texture" to slot 0
+        // Task 10: Bind "texture" to slot 1
         if (shape.primitive.material.textureMap.isUsed) {
             glActiveTexture(GL_TEXTURE1);
             glErrorCheck();
@@ -684,7 +697,7 @@ void Realtime::sceneChanged() {
             glGenTextures(1, &m_kitten_texture);
             glErrorCheck();
 
-            // Task 9: Set the active texture slot to texture slot 0
+            // Task 9: Set the active texture slot to texture slot 1
             glActiveTexture(GL_TEXTURE1);
             glErrorCheck();
 
@@ -702,20 +715,22 @@ void Realtime::sceneChanged() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glErrorCheck();
 
-            // Task 7: Unbind kitten texture
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glErrorCheck();
-
             glUseProgram(m_shader);
             glErrorCheck();
             glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
             glErrorCheck();
+
+            // Task 7: Unbind kitten texture
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glErrorCheck();
+
             glUseProgram(0);
             glErrorCheck();
+
         }
     }
 
-
+    // std::cout << "SCENE LOADED" << std::endl;
     update(); // asks for a PaintGL() call to occur
 }
 

@@ -151,5 +151,5 @@ void main() {
     // } else {
     //     fragColor = vec4(1.f);
     // }
-    // fragColor = texture(tex, UV);
+    fragColor = texture(tex, UV);
 }
