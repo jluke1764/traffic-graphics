@@ -1016,39 +1016,7 @@ void Realtime::tileCity() {
     }
 }
 
-void Realtime::sceneChanged() {
-    makeCurrent();
-    SceneParser::parse(settings.sceneFilePath, m_metaData);
-    glErrorCheck();
-
-    tileCity();
-
-    Realtime::updateLights();
-    glErrorCheck();
-
-
-    Camera camera(m_metaData.cameraData, size().width(), size().height());
-
-    m_view = camera.getViewMatrix();
-    m_proj = camera.getProjectionMatrix();
-
-    glUseProgram(m_shader);
-    glErrorCheck();
-
-    glUniform1f(glGetUniformLocation(m_shader,"k_a"),m_metaData.globalData.ka);
-    glErrorCheck();
-    glUniform1f(glGetUniformLocation(m_shader,"k_d"),m_metaData.globalData.kd);
-    glErrorCheck();
-    glUniform1f(glGetUniformLocation(m_shader,"k_s"),m_metaData.globalData.ks);
-    glErrorCheck();
-
-    glUniform4fv(glGetUniformLocation(m_shader,"cameraPosition"),1,&(camera.getPos()[0]));
-
-    glUseProgram(0);
-    glErrorCheck();
-
-    setTimeOfDay();
-  
+void Realtime::renderBuildings() {
     int num_shapes = m_metaData.shapes.size();
 
     for (int i=0; i<num_shapes; ++i){
@@ -1093,6 +1061,42 @@ void Realtime::sceneChanged() {
 
         }
     }
+}
+
+void Realtime::sceneChanged() {
+    makeCurrent();
+    SceneParser::parse(settings.sceneFilePath, m_metaData);
+    glErrorCheck();
+
+    tileCity();
+
+    Realtime::updateLights();
+    glErrorCheck();
+
+
+    Camera camera(m_metaData.cameraData, size().width(), size().height());
+
+    m_view = camera.getViewMatrix();
+    m_proj = camera.getProjectionMatrix();
+
+    glUseProgram(m_shader);
+    glErrorCheck();
+
+    glUniform1f(glGetUniformLocation(m_shader,"k_a"),m_metaData.globalData.ka);
+    glErrorCheck();
+    glUniform1f(glGetUniformLocation(m_shader,"k_d"),m_metaData.globalData.kd);
+    glErrorCheck();
+    glUniform1f(glGetUniformLocation(m_shader,"k_s"),m_metaData.globalData.ks);
+    glErrorCheck();
+
+    glUniform4fv(glGetUniformLocation(m_shader,"cameraPosition"),1,&(camera.getPos()[0]));
+
+    glUseProgram(0);
+    glErrorCheck();
+
+    setTimeOfDay();
+
+    renderBuildings();
 
     update(); // asks for a PaintGL() call to occur
 }
