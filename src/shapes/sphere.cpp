@@ -8,8 +8,8 @@ void Sphere::updateParams(int param1, int param2) {
 }
 
 glm::vec2 Sphere::getUV(float x, float y, float z) {
-    float u;
-    float v;
+    float u = 0;
+    float v = 0;
     float theta = atan2(z,x);
     if (theta < 0) {
         u = -theta/(2*M_PI);

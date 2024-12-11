@@ -368,10 +368,10 @@ void Realtime::paintGeometry() {
         }
         std::cout <<"here5" <<std::endl;
         // Task 9: Set the active texture slot to texture slot 1
-        glActiveTexture(GL_TEXTURE1);
+        glActiveTexture(GL_TEXTURE1+i);
         glErrorCheck();
 
-        glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+        glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
         glErrorCheck();
 
         // Task 6: Set min and mag filters' interpolation mode to linear
@@ -382,7 +382,7 @@ void Realtime::paintGeometry() {
 
         glUseProgram(m_shader);
         glErrorCheck();
-        glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+        glUniform1i(glGetUniformLocation(m_shader, "tex"), 1+i);
         glErrorCheck();
 
         // Bind the vbo and vao
@@ -713,6 +713,7 @@ void Realtime::updateLights() {
 // }
 
 void Realtime::sceneChanged() {
+    std::cout << "in sceneChanged1" << std::endl;
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
@@ -759,17 +760,20 @@ void Realtime::sceneChanged() {
 
             // Task 2: Format image to fit OpenGL
             m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+            std::cout << "in sceneChanged2" << std::endl;
+
 
             // Task 3: Generate kitten texture
-            glGenTextures(1, &m_kitten_texture);
+            glGenTextures(1, &m_kitten_textures[i]);
             glErrorCheck();
+            std::cout << "in sceneChanged3" << std::endl;
 
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE1);
+            glActiveTexture(GL_TEXTURE1+i);
             glErrorCheck();
 
             // Task 4: Bind kitten texture
-            glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
             glErrorCheck();
 
             // Task 5: Load image into kitten texture

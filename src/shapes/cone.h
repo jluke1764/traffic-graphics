@@ -22,6 +22,7 @@ private:
     void makeSide();
     void makeCap();
     void setVertexData();
+    glm::vec2 getUV(glm::vec3 point);
 
     std::vector<float> m_vertexData;
     int m_param1;

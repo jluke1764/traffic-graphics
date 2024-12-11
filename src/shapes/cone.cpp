@@ -7,6 +7,28 @@ void Cone::updateParams(int param1, int param2) {
     m_param2 = param2;
     setVertexData();
 }
+glm::vec2 Cone::getUV(glm::vec3 point) {
+    float u;
+    float v;
+    float x = point.x;
+    float y = point.y;
+    float z = point.z;
+    if ((y+0.5)<0) {
+        u = x+0.5;
+        v = z+0.5;
+    } else {
+        float theta = atan2(z,x);
+        // std::cout << "theta: " << theta << std::endl;
+        if (theta < 0) {
+            u = -theta/(2*M_PI);
+        } else if (theta > 0) {
+            u = 1-theta/(2*M_PI);
+        }
+        v = y+0.5;
+    }
+    return glm::vec2(u,v);
+}
+
 
 void Cone::makeTile(glm::vec3 topLeft,
                     glm::vec3 topRight,
@@ -35,67 +57,67 @@ void Cone::makeTile(glm::vec3 topLeft,
     if (isSide) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topRight));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topRight));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomRight));
     }
     if (isBottom) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topRight));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomRight));
 
     } else if (isTop) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
-        insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+        insertVec2(m_vertexData, getUV(bottomLeft));
     }
 }
 
@@ -159,32 +181,32 @@ void Cone::makeCap() {
             // Insert first vertex
             insertVec3(m_vertexData, p1);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p1));
 
             // Insert second vertex
             insertVec3(m_vertexData, p2);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p2));
 
             // Insert third vertex
             insertVec3(m_vertexData, p3);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p3));
 
             // Insert first vertex
             insertVec3(m_vertexData, p4);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p4));
 
             // Insert second vertex
             insertVec3(m_vertexData, p5);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p5));
 
             // Insert third vertex
             insertVec3(m_vertexData, p6);
             insertVec3(m_vertexData, normal);
-            insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+            insertVec2(m_vertexData, getUV(p6));
         }
     }
 }
