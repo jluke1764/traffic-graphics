@@ -171,7 +171,7 @@ glm::vec3 Car::getPosition() {
 void Car::update(int time) {
 
     float posError = 0.1; //must have error
-    float dirError = 0.1;
+    float dirError = .5;
 
     //restore angles to proper ranges
     m_steeringAngle = fmod(m_steeringAngle, 2*M_PI);
@@ -180,7 +180,7 @@ void Car::update(int time) {
     //convert positions to 2d vectors
 
 
-    glm::vec2 togo = glm::vec2(m_desiredPosition.x-m_position.x, m_desiredPosition.z-m_desiredPosition.z);
+    glm::vec2 togo = glm::vec2(m_desiredPosition.x-m_position.x, m_desiredPosition.z-m_position.z);
     float dist = glm::length(togo);
 
     //if current position is not the desired position
@@ -202,18 +202,22 @@ void Car::update(int time) {
         if (fabs(angleDiff) > dirError) {
 
             if (fabs(m_steeringAngle) < m_maxSteeringAngle) {
+                m_steeringSpeed = 2*1/m_speed;
                 if (angleDiff > 0) {
-                    m_steeringAngle = m_steeringSpeed;
+                    m_steeringAngle += glm::radians(m_steeringSpeed);
 
                 } else if (angleDiff < 0) {
-                    m_steeringAngle = -m_steeringSpeed;
+                    m_steeringAngle -= glm::radians(m_steeringSpeed);
 
                 }
             }
 
+        } else {
+            m_steeringAngle = 0;
         }
+        std::cout << "steering angle: " << glm::degrees(m_steeringAngle) << std::endl;
 
-        drive(m_steeringAngle, m_speed);
+        drive(glm::degrees(m_steeringAngle), m_speed);
 
     }
 }

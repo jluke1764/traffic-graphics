@@ -39,7 +39,7 @@ void TrafficScene::update(int time) {
     for (Car* car : m_cars) {
 
         if (time == 1) {
-            car->setDesiredPosition(car->getPosition() + glm::vec3(5, 0, 0));
+            car->setDesiredPosition(car->getPosition() + glm::vec3(7, 0, 7));
         }
 
         car->update(time);

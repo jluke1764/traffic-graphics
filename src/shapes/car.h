@@ -36,6 +36,7 @@ public:
 
     void update(int time);
 
+
     void setDesiredPosition(glm::vec3 desiredPos);
     glm::vec3 getPosition();
 
@@ -52,8 +53,8 @@ private:
     float m_wheelRadius = 0.5*0.7; //based on scaling
 
     float m_steeringAngle = 0.0;
-    float m_steeringSpeed = 1.0; //max angle change in one timestep
-    float m_maxSteeringAngle = glm::radians(30.0f);
+    float m_steeringSpeed = glm::radians(1.0f); //max angle change in one timestep
+    float m_maxSteeringAngle = glm::radians(45.0f);
 
 
 
