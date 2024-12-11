@@ -14,6 +14,9 @@
 #include "shapes/cone.h"
 #include "debug.h"
 #include "camera/camera.h"
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
 
 void printVector(const std::string &name, const glm::vec4 &v) {
     std::cout << name << ": ";
@@ -154,6 +157,7 @@ void Realtime::initializeGL() {
 
     initializeGeometry();
 
+
     // Task 10: Set the texture.frag uniform for our texture
     glUseProgram(m_texture_shader);
     glErrorCheck();
@@ -161,6 +165,7 @@ void Realtime::initializeGL() {
     glErrorCheck();
     glUseProgram(0);
     glErrorCheck();
+
 
     // Task 11: Fix this "fullscreen" quad's vertex data
     // Task 12: Play around with different values!
@@ -231,11 +236,15 @@ void Realtime::initializeGeometry() {
         // Enable and define attribute 0 to store vertex positions
         glEnableVertexAttribArray(0);
         glErrorCheck();
-        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(0));
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(0));
         glErrorCheck();
         glEnableVertexAttribArray(1);
         glErrorCheck();
-        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+        glErrorCheck();
+        glEnableVertexAttribArray(2);
+        glErrorCheck();
+        glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8 * sizeof(GLfloat),reinterpret_cast<void *>(6 * sizeof(GLfloat)));
         glErrorCheck();
 
         // Clean-up bindings
@@ -251,6 +260,7 @@ void Realtime::initializeGeometry() {
     std::cout << "num car shapes: " << m_trafficScene.getShapes().size() << std::endl;
     // makeFBO();
     // initialized = true;
+
 }
 
 void Realtime::makeFBO(){
@@ -274,6 +284,7 @@ void Realtime::makeFBO(){
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glErrorCheck();
+
     // Task 20: Generate and bind a renderbuffer of the right size, set its format, then unbind
     glGenRenderbuffers(1, &m_fbo_renderbuffer);
     glErrorCheck();
@@ -345,6 +356,11 @@ void Realtime::paintGeometry() {
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
 
+        glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+        glErrorCheck();
+        glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+        glErrorCheck();
+
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
             shapeIndex = m_sphereIndex;
@@ -355,6 +371,23 @@ void Realtime::paintGeometry() {
         } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
             shapeIndex = m_coneIndex;
         }
+        // Task 9: Set the active texture slot to texture slot 1
+        glActiveTexture(GL_TEXTURE1+i);
+        glErrorCheck();
+
+        glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
+        glErrorCheck();
+
+        // Task 6: Set min and mag filters' interpolation mode to linear
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glErrorCheck();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glErrorCheck();
+
+        glUseProgram(m_shader);
+        glErrorCheck();
+        glUniform1i(glGetUniformLocation(m_shader, "tex"), 1+i);
+        glErrorCheck();
 
         // Bind the vbo and vao
         glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
@@ -363,14 +396,18 @@ void Realtime::paintGeometry() {
         glBindVertexArray(m_vaos[shapeIndex]);
         glErrorCheck();
 
-        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 6);
+        glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
         glErrorCheck();
+
 
         // Clean-up bindings
         glBindVertexArray(0);
         glErrorCheck();
 
         glBindBuffer(GL_ARRAY_BUFFER,0);
+        glErrorCheck();
+
+        glBindTexture(GL_TEXTURE_2D, 0);
         glErrorCheck();
     }
 
@@ -433,7 +470,7 @@ void Realtime::paintGeometry() {
     glErrorCheck();
 }
 
-void Realtime::paintTexture(GLuint texture, bool invert, bool sharpen, bool grayScale, bool blur, bool sepia, bool edgeDetection){
+void Realtime::paintPostprocess(GLuint texture, bool invert, bool sharpen, bool grayScale, bool blur, bool sepia, bool edgeDetection){
     glUseProgram(m_texture_shader);
     // Task 32: Set your bool uniform on whether or not to filter the texture drawn
     glUniform1i(glGetUniformLocation(m_texture_shader, "invert"), invert);
@@ -442,17 +479,100 @@ void Realtime::paintTexture(GLuint texture, bool invert, bool sharpen, bool gray
     glUniform1i(glGetUniformLocation(m_texture_shader, "blur"), blur);
     glUniform1i(glGetUniformLocation(m_texture_shader, "sepia"), sepia);
     glUniform1i(glGetUniformLocation(m_texture_shader, "edgeDetection"), edgeDetection);
+    glErrorCheck();
 
     glBindVertexArray(m_fullscreen_vao);
+    glErrorCheck();
     // Task 10: Bind "texture" to slot 0
     glActiveTexture(GL_TEXTURE0);
+    glErrorCheck();
     glBindTexture(GL_TEXTURE_2D, texture);
+    glErrorCheck();
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    glErrorCheck();
     glBindTexture(GL_TEXTURE_2D, 0);
+    glErrorCheck();
     glBindVertexArray(0);
+    glErrorCheck();
     glUseProgram(0);
+    glErrorCheck();
 }
+
+// void Realtime::paintTexture() {
+//     glUseProgram(m_shader);
+//     glErrorCheck();
+//     int num_shapes = m_metaData.shapes.size();
+
+//     for (int i=0; i<num_shapes; ++i){
+
+//         RenderShapeData &shape = m_metaData.shapes[i];
+//         glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
+//         glErrorCheck();
+//         glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
+//         glErrorCheck();
+//         // Task 10: Bind "texture" to slot 1
+//         if (shape.primitive.material.textureMap.isUsed) {
+//             glActiveTexture(GL_TEXTURE1);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+//             glErrorCheck();
+
+//             // Task 3: Generate kitten texture
+//             glGenTextures(1, &m_kitten_texture);
+//             glErrorCheck();
+
+//             // Task 9: Set the active texture slot to texture slot 1
+//             glActiveTexture(GL_TEXTURE1);
+//             glErrorCheck();
+
+//             // Task 4: Bind kitten texture
+//             glBindTexture(GL_TEXTURE_2D, m_kitten_texture);
+//             glErrorCheck();
+
+//             // Task 5: Load image into kitten texture
+//             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+//             glErrorCheck();
+
+//             // Task 6: Set min and mag filters' interpolation mode to linear
+//             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//             glErrorCheck();
+//             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//             glErrorCheck();
+
+//             glUniform1i(glGetUniformLocation(m_shader, "tex"), 1);
+//             glErrorCheck();
+
+//             glBindVertexArray(m_vaos[i]);
+//             glErrorCheck();
+
+//             int shapeIndex = m_sphereIndex;
+//             if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
+//                 shapeIndex = m_sphereIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CUBE) {
+//                 shapeIndex = m_cubeIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CYLINDER) {
+//                 shapeIndex = m_cylinderIndex;
+//             } else if (shape.primitive.type == PrimitiveType::PRIMITIVE_CONE) {
+//                 shapeIndex = m_coneIndex;
+//             }
+
+//             glBindBuffer(GL_ARRAY_BUFFER, m_vbos[shapeIndex]);
+//             glErrorCheck();
+
+
+//             glDrawArrays(GL_TRIANGLES, 0, shapeData[shapeIndex].size() / 8);
+//             glErrorCheck();
+//             glBindTexture(GL_TEXTURE_2D, 0);
+//             glErrorCheck();
+
+//             glBindVertexArray(0);
+//             glErrorCheck();
+//         }
+//     }
+//     glUseProgram(0);
+//     glErrorCheck();
+// }
 
 void Realtime::paintGL() {
     // Task 24: Bind our FBO
@@ -516,7 +636,8 @@ void Realtime::paintGL() {
     } else {
         edgeDetection = false;
     }
-    paintTexture(m_fbo_texture, invert, sharpen, grayScale, blur, sepia, edgeDetection);
+    // paintTexture();
+    paintPostprocess(m_fbo_texture, invert, sharpen, grayScale, blur, sepia, edgeDetection);
 }
 
 void Realtime::resizeGL(int w, int h) {
@@ -622,25 +743,261 @@ void Realtime::updateLights() {
     glUseProgram(0);
 }
 
+bool boxesOverlap(const std::array<float,4> &a, const std::array<float,4> &b) {
+    bool overlapX = (a[0] < b[1]) && (a[1] > b[0]);
+    bool overlapZ = (a[2] < b[3]) && (a[3] > b[2]);
+    return overlapX && overlapZ;
+}
+
 void Realtime::tileCity() {
-    RenderData block;
+    static bool seeded = false;
+    if (!seeded) {
+        srand((unsigned int)time(nullptr));
+        seeded = true;
+    }
 
-    SceneParser::parse("scenefiles/block.json", block);
+    RenderData blockData;
+    SceneParser::parse("scenefiles/block.json", blockData);
 
-    for(int x = -5; x <= 5; x++) {
-        for(int z = -5; z <= 5; z++) {
-            glm::mat4 translation = glm::transpose(glm::mat4(1,0,0,x,
-                                                       0,1,0,0,
-                                                       0,0,1,z,
-                                                       0,0,0,1));
+    int citySize = 5;
+    float blockSpacing = 1.0f;
+    int numBuildings = 4;
+    float empireBlockChance = 0.02f;
 
-            for(RenderShapeData s : block.shapes) {
-                s.ctm = translation * s.ctm;
-                m_metaData.shapes.push_back(s);
+    std::vector<RenderShapeData> baseBlockShapes;
+    RenderShapeData whiteColumnData;
+    bool whiteColumnFound = false;
+
+    // Get white column primitive, ignore ctm from the file
+    for (auto &s : blockData.shapes) {
+        bool isWhite =
+            (s.primitive.type == PrimitiveType::PRIMITIVE_CUBE) &&
+            fabs(s.primitive.material.cDiffuse.r - 0.9f) < 0.001f &&
+            fabs(s.primitive.material.cDiffuse.g - 0.9f) < 0.001f &&
+            fabs(s.primitive.material.cDiffuse.b - 0.9f) < 0.001f;
+
+        glm::vec3 scaleApprox(
+            glm::length(glm::vec3(s.ctm[0])),
+            glm::length(glm::vec3(s.ctm[1])),
+            glm::length(glm::vec3(s.ctm[2]))
+            );
+
+        bool scaleMatchesWhite = (fabs(scaleApprox.x - 0.3f) < 0.05f &&
+                                  fabs(scaleApprox.y - 1.0f) < 0.05f &&
+                                  fabs(scaleApprox.z - 0.3f) < 0.05f);
+
+        if (isWhite && scaleMatchesWhite && !whiteColumnFound) {
+            // Copy only the primitive and material data, not the ctm
+            whiteColumnData.primitive = s.primitive;
+            whiteColumnFound = true;
+        } else {
+            baseBlockShapes.push_back(s);
+        }
+    }
+
+    for (int blockIx = -citySize; blockIx <= citySize; blockIx++) {
+        for (int blockIz = -citySize; blockIz <= citySize; blockIz++) {
+            float blockCenterX = blockIx * blockSpacing;
+            float blockCenterZ = blockIz * blockSpacing;
+
+            glm::mat4 blockTranslate = glm::translate(glm::vec3(blockCenterX, 0.f, blockCenterZ));
+
+            bool isEmpireBlock = ((float)rand()/RAND_MAX) < empireBlockChance;
+            bool placeWhiteColumn = false;
+            if (!isEmpireBlock && whiteColumnFound) {
+                placeWhiteColumn = ((float)rand()/RAND_MAX) < 0.5f;
+            }
+
+            // Place ground and roads
+            for (auto &s : baseBlockShapes) {
+                RenderShapeData shape = s;
+                shape.ctm = blockTranslate * shape.ctm;
+                m_metaData.shapes.push_back(shape);
+            }
+
+            std::vector<std::array<float,4>> placedBoxes;
+
+            // white column
+            if (!isEmpireBlock && placeWhiteColumn && whiteColumnFound) {
+                float heightFactor = 0.5f + ((float)rand()/RAND_MAX)*1.0f;
+
+                float colBaseWidth = 0.3f;
+                float halfW = colBaseWidth / 2.0f;
+                float maxOffset = 0.35f - halfW;
+                maxOffset = std::max(0.0f, maxOffset);
+
+                float columnHeight = 1.0f * heightFactor;
+
+                bool placedWC = false;
+                for (int attempt = 0; attempt < 10 && !placedWC; attempt++) {
+                    float offsetX = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+                    float offsetZ = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+
+                    float worldX = blockCenterX + offsetX;
+                    float worldZ = blockCenterZ + offsetZ;
+
+                    // Bottom at y=0, so top is at y=columnHeight, center at columnHeight/2
+                    float yPos = columnHeight / 2.0f;
+
+                    glm::mat4 wcTransform = glm::translate(glm::vec3(worldX, yPos, worldZ))
+                                            * glm::scale(glm::vec3(colBaseWidth, columnHeight, colBaseWidth));
+
+                    RenderShapeData wc = whiteColumnData;
+                    wc.ctm = wcTransform;
+                    m_metaData.shapes.push_back(wc);
+
+                    // Compute bounding box in world coords
+                    float colHalfW = colBaseWidth / 2.0f;
+                    float left   = worldX - colHalfW;
+                    float right  = worldX + colHalfW;
+                    float zMin   = worldZ - colHalfW;
+                    float zMax   = worldZ + colHalfW;
+                    std::array<float,4> candidateBox = {left, right, zMin, zMax};
+
+                    bool overlap = false;
+                    for (auto &box : placedBoxes) {
+                        if (boxesOverlap(candidateBox, box)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+
+                    if (overlap) {
+                        // Remove last placed
+                        m_metaData.shapes.pop_back();
+                    } else {
+                        placedBoxes.push_back(candidateBox);
+                        placedWC = true;
+                    }
+                }
+            }
+
+            // Empire block
+            if (isEmpireBlock) {
+                float buildingHeight = 1.5f + ((float)rand()/RAND_MAX)*1.0f;
+                float buildingWidth = 0.3f + ((float)rand()/RAND_MAX)*0.1f;
+
+                float gray = 0.4f + ((float)rand()/RAND_MAX)*0.35f;
+                float r = gray, g = gray, b = gray;
+
+                float worldX = blockCenterX;
+                float worldZ = blockCenterZ;
+
+                RenderShapeData empireBuilding;
+                empireBuilding.primitive.type = PrimitiveType::PRIMITIVE_CUBE;
+                empireBuilding.primitive.material.cAmbient = glm::vec4(r*0.5f, g*0.5f, b*0.5f, 1.f);
+                empireBuilding.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
+                empireBuilding.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                empireBuilding.primitive.material.shininess = 10.f;
+
+                glm::mat4 empireTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
+                                            * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
+
+                empireBuilding.ctm = empireTransform;
+                m_metaData.shapes.push_back(empireBuilding);
+
+                float spireHeightFactor = 0.3f + ((float)rand()/RAND_MAX)*1.0f;
+                float spireHeight = buildingHeight * spireHeightFactor;
+
+                RenderShapeData spire;
+                spire.primitive.type = PrimitiveType::PRIMITIVE_CONE;
+                float rr = r*0.8f, rg = g*0.8f, rb = b*0.8f;
+                spire.primitive.material.cAmbient = glm::vec4(rr*0.5f, rg*0.5f, rb*0.5f, 1.f);
+                spire.primitive.material.cDiffuse = glm::vec4(rr, rg, rb, 1.f);
+                spire.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                spire.primitive.material.shininess = 10.f;
+
+                glm::mat4 spireTransform = glm::translate(glm::vec3(worldX, buildingHeight + spireHeight/2.0f, worldZ))
+                                           * glm::scale(glm::vec3(buildingWidth * 0.5f, spireHeight, buildingWidth * 0.5f));
+
+                spire.ctm = spireTransform;
+                m_metaData.shapes.push_back(spire);
+                continue;
+            }
+
+            // Normal buildings
+            for (int i = 0; i < numBuildings; i++) {
+                float buildingWidth = 0.1f + ((float)rand()/RAND_MAX)*0.1f;
+                float halfW = buildingWidth/2.0f;
+                float maxOffset = 0.35f - halfW;
+                maxOffset = std::max(0.0f, maxOffset);
+
+                float buildingHeight = 0.2f + ((float)rand()/RAND_MAX)*0.8f;
+
+                float gray = 0.4f + ((float)rand()/RAND_MAX)*0.35f;
+                float r = gray, g = gray, b = gray;
+
+                bool placed = false;
+                for (int attempt = 0; attempt < 10 && !placed; attempt++) {
+                    float offsetX = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+                    float offsetZ = ((float)rand()/RAND_MAX)*2.f*maxOffset - maxOffset;
+
+                    float worldX = blockCenterX + offsetX;
+                    float worldZ = blockCenterZ + offsetZ;
+
+                    float left   = worldX - halfW;
+                    float right  = worldX + halfW;
+                    float zMin   = worldZ - halfW;
+                    float zMax   = worldZ + halfW;
+                    std::array<float,4> candidateBox = {left, right, zMin, zMax};
+
+                    bool overlap = false;
+                    for (auto &box : placedBoxes) {
+                        if (boxesOverlap(candidateBox, box)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+
+                    if (!overlap) {
+                        RenderShapeData building;
+                        building.primitive.type = PrimitiveType::PRIMITIVE_CUBE;
+                        building.primitive.material.cAmbient = glm::vec4(r*0.5f, g*0.5f, b*0.5f, 1.f);
+                        building.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
+                        building.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                        building.primitive.material.shininess = 10.f;
+
+                        glm::mat4 buildingTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
+                                                      * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
+
+                        building.ctm = buildingTransform;
+                        m_metaData.shapes.push_back(building);
+
+                        placedBoxes.push_back(candidateBox);
+
+                        bool addRoof = ((rand() % 2) == 0);
+                        if (addRoof) {
+                            RenderShapeData roof;
+                            roof.primitive.type = PrimitiveType::PRIMITIVE_CONE;
+
+                            float roofFactor = 0.8f;
+                            float rr = std::clamp(r*roofFactor, 0.f,1.f);
+                            float rg = std::clamp(g*roofFactor, 0.f,1.f);
+                            float rb = std::clamp(b*roofFactor, 0.f,1.f);
+
+                            roof.primitive.material.cAmbient = glm::vec4(rr*0.5f, rg*0.5f, rb*0.5f, 1.f);
+                            roof.primitive.material.cDiffuse = glm::vec4(rr, rg, rb, 1.f);
+                            roof.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
+                            roof.primitive.material.shininess = 10.f;
+
+                            float roofHeight = buildingHeight * 0.3f;
+                            float roofBaseScale = buildingWidth * 1.1f;
+
+                            glm::mat4 roofTransform = glm::translate(glm::vec3(worldX, buildingHeight + roofHeight/2.0f, worldZ))
+                                                      * glm::scale(glm::vec3(roofBaseScale, roofHeight, roofBaseScale));
+
+                            roof.ctm = roofTransform;
+                            m_metaData.shapes.push_back(roof);
+                        }
+
+                        placed = true;
+                    }
+                }
             }
         }
     }
 }
+
 
 void Realtime::sceneChanged() {
     makeCurrent();
@@ -651,6 +1008,7 @@ void Realtime::sceneChanged() {
 
     Realtime::updateLights();
     glErrorCheck();
+
 
     Camera camera(m_metaData.cameraData, size().width(), size().height());
 
@@ -671,6 +1029,51 @@ void Realtime::sceneChanged() {
 
     glUseProgram(0);
     glErrorCheck();
+
+    int num_shapes = m_metaData.shapes.size();
+
+    for (int i=0; i<num_shapes; ++i){
+
+        RenderShapeData &shape = m_metaData.shapes[i];
+
+        if (shape.primitive.material.textureMap.isUsed) {
+
+            // Prepare filepath
+            QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+
+            // Task 1: Obtain image from filepath
+            m_image = QImage(texture_filepath);
+
+            // Task 2: Format image to fit OpenGL
+            m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+
+            // Task 3: Generate kitten texture
+            glGenTextures(1, &m_kitten_textures[i]);
+            glErrorCheck();
+
+            // Task 9: Set the active texture slot to texture slot 1
+            glActiveTexture(GL_TEXTURE1+i);
+            glErrorCheck();
+
+            // Task 4: Bind kitten texture
+            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
+            glErrorCheck();
+
+            // Task 5: Load image into kitten texture
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+            glErrorCheck();
+
+            // Task 7: Unbind kitten texture
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glErrorCheck();
+
+            glUseProgram(0);
+            glErrorCheck();
+
+        }
+    }
 
     update(); // asks for a PaintGL() call to occur
 }

@@ -9,29 +9,43 @@ void Cube::updateParams(int param1) {
 void Cube::makeTile(glm::vec3 topLeft,
                     glm::vec3 topRight,
                     glm::vec3 bottomLeft,
-                    glm::vec3 bottomRight) {
+                    glm::vec3 bottomRight,
+                    int i, int j) {
     // Task 2: create a tile (i.e. 2 triangles) based on 4 given points.
     glm::vec3 normal1 = glm::normalize(glm::cross(bottomLeft-topLeft, bottomRight-topLeft));
     glm::vec3 normal2 = glm::normalize(glm::cross(bottomRight-topLeft, topRight-topLeft));
 
+    float u0 = float(i)/m_param1;
+    float u1 = float(i+1)/m_param1;
+    float v0 = 1-float(j+1)/m_param1;
+    float v1 = 1-float(j)/m_param1;
+
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u0,v1));
 
     insertVec3(m_vertexData, bottomLeft);
     insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u0,v0));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u1,v0));
 
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u0,v1));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u1,v0));
 
     insertVec3(m_vertexData, topRight);
     insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u1,v1));
 }
+
+
 
 void Cube::makeFace(glm::vec3 topLeft,
                     glm::vec3 topRight,
@@ -53,7 +67,7 @@ void Cube::makeFace(glm::vec3 topLeft,
             glm::vec3 BL = TL + y_distance;
             glm::vec3 BR = BL + x_distance;
 
-            makeTile(TL, TR, BL, BR);
+            makeTile(TL, TR, BL, BR, i, j);
         }
     }
 }
@@ -72,6 +86,7 @@ void Cube::setVertexData() {
              glm::vec3( 0.5f,  0.5f, 0.5f),
              glm::vec3(-0.5f, -0.5f, 0.5f),
              glm::vec3( 0.5f, -0.5f, 0.5f));
+
 
     // Task 4: Use the makeFace() function to make all 6 sides of the cube
     //left face
@@ -111,4 +126,8 @@ void Cube::insertVec3(std::vector<float> &data, glm::vec3 v) {
     data.push_back(v.x);
     data.push_back(v.y);
     data.push_back(v.z);
+}
+void Cube::insertVec2(std::vector<float> &data, glm::vec2 v) {
+    data.push_back(v.x);
+    data.push_back(v.y);
 }
