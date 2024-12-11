@@ -43,13 +43,13 @@ public:
 
 
 private:
-    float m_scaleFactor = 0.25; //scale according to rest of scene (block is 1)
+    float m_scaleFactor = 0.10; //scale according to rest of scene (block is 1)
 
 
     glm::vec3 m_position = glm::vec3(0.0);
     float m_directionAngle = 0.0;
 
-    float m_speed = 0.05*m_scaleFactor; //position change in one timestep
+    float m_speed = 1*m_scaleFactor; //position change in one timestep
     float m_acceleration = 0.0;
 
     float m_wheelbase = 2.5;

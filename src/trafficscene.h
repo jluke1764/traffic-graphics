@@ -8,7 +8,7 @@ class TrafficScene
 {
 public:
     TrafficScene();
-    std::vector<RenderShapeData>& getShapes(std::vector<RenderShapeData> &metaData);
+    std::vector<RenderShapeData>& getShapes();
     void update(int time);
 
 private:

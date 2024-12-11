@@ -387,11 +387,17 @@ void Realtime::paintGeometry() {
     glUniformMatrix4fv(glGetUniformLocation(m_shader, "model_proj"), 1, GL_FALSE, &m_proj[0][0]);
     glErrorCheck();
 
-    int num_shapes = m_metaData.shapes.size();
+    // int num_shapes = m_metaData.shapes.size();
+
+    std::vector<RenderShapeData> myShapes;
+    myShapes.insert(myShapes.end(), m_metaData.shapes.begin(), m_metaData.shapes.end());
+    myShapes.insert(myShapes.end(), m_trafficScene.getShapes().begin(), m_trafficScene.getShapes().end());
+
+    int num_shapes = myShapes.size();
 
     for (int i=0; i<num_shapes; ++i){
 
-        RenderShapeData &shape = m_metaData.shapes[i];
+        RenderShapeData &shape = myShapes[i];
 
         glm::mat4 model = shape.ctm;
 
@@ -414,7 +420,7 @@ void Realtime::paintGeometry() {
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
 
-        glUniform1i(glGetUniformLocation(m_shader,"useFog"), true);
+        glUniform1i(glGetUniformLocation(m_shader,"useFog"), false); //JL
         glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 10.0);
         glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 20.0);
 
@@ -1082,8 +1088,8 @@ void Realtime::sceneChanged() {
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
 
-    // tileCity();
-    m_trafficScene.getShapes(m_metaData.shapes);
+    // m_trafficScene.getShapes(m_metaData.shapes);
+    tileCity();
 
     Realtime::updateLights();
     glErrorCheck();
