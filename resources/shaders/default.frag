@@ -137,5 +137,4 @@ void main() {
         }
 
     }
-    fragColor = texture(tex, UV);
 }
