@@ -15,30 +15,37 @@ void Cube::makeTile(glm::vec3 topLeft,
     glm::vec3 normal1 = glm::normalize(glm::cross(bottomLeft-topLeft, bottomRight-topLeft));
     glm::vec3 normal2 = glm::normalize(glm::cross(bottomRight-topLeft, topRight-topLeft));
 
+    float u0 = float(i)/m_param1;
+    float u1 = float(i+1)/m_param1;
+    float v0 = 1-float(j+1)/m_param1;
+    float v1 = 1-float(j)/m_param1;
+
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, normal1);
-    insertVec2(m_vertexData, glm::vec2(0.f,1.f));
+    insertVec2(m_vertexData, glm::vec2(u0,v1));
 
     insertVec3(m_vertexData, bottomLeft);
     insertVec3(m_vertexData, normal1);
-    insertVec2(m_vertexData, glm::vec2(0.f,0.f));
+    insertVec2(m_vertexData, glm::vec2(u0,v0));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, normal1);
-    insertVec2(m_vertexData, glm::vec2(1.f,0.f));
+    insertVec2(m_vertexData, glm::vec2(u1,v0));
 
     insertVec3(m_vertexData, topLeft);
     insertVec3(m_vertexData, normal2);
-    insertVec2(m_vertexData, glm::vec2(0.f,1.f));
+    insertVec2(m_vertexData, glm::vec2(u0,v1));
 
     insertVec3(m_vertexData, bottomRight);
     insertVec3(m_vertexData, normal2);
-    insertVec2(m_vertexData, glm::vec2(1.f,0.f));
+    insertVec2(m_vertexData, glm::vec2(u1,v0));
 
     insertVec3(m_vertexData, topRight);
     insertVec3(m_vertexData, normal2);
-    insertVec2(m_vertexData, glm::vec2(1.f,1.f));
+    insertVec2(m_vertexData, glm::vec2(u1,v1));
 }
+
+
 
 void Cube::makeFace(glm::vec3 topLeft,
                     glm::vec3 topRight,
