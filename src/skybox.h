@@ -21,7 +21,7 @@ public:
 
     ~Skybox();
 
-    void Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao);
+    void Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao, glm::vec4 sun_color);
 private:
     GLuint m_texture;
     GLuint m_slot;

@@ -52,12 +52,14 @@ uniform Light[10] lights;
 //need to figure out how to pass these in
 
 float getFogAmt(float fog_coord) {
-    float start = fogStart;
-    float end = fogEnd;
+    //float start = fogStart;
+    //float end = fogEnd;
 
-    float r = (end - fog_coord) / (end - start);
+    //float r = (end - fog_coord) / (end - start);
 
-    return 1.0 - clamp(r, 0.0, 1.0);
+    //return 1.0 - clamp(r, 0.0, 1.0);
+
+    return clamp(1.0-exp(-(.1*fog_coord)*(.1*fog_coord)), 0.0, 1.0);
 }
 
 

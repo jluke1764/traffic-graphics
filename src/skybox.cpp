@@ -71,7 +71,7 @@ Skybox::Skybox(const std::string& positive_x_path,
     glActiveTexture(GL_TEXTURE0);
 }
 
-void Skybox::Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao)
+void Skybox::Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao, glm::vec4 sun_color)
 {
     glCullFace(GL_FRONT);
     glDepthFunc(GL_LEQUAL);
@@ -85,6 +85,9 @@ void Skybox::Render(glm::mat4 mvp, GLuint shader_program, GLuint vbo, GLuint vao
     glErrorCheck();
 
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "mvp"), 1, GL_FALSE, &mvp[0][0]);
+    glErrorCheck();
+
+    glUniform4fv(glGetUniformLocation(shader_program, "sky_color"), 1, &sun_color[0]);
     glErrorCheck();
 
     glDrawArrays(GL_TRIANGLES, 0, skybox_verts);

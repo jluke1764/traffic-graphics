@@ -395,8 +395,8 @@ void Realtime::paintGeometry() {
         glErrorCheck();
 
         glUniform1i(glGetUniformLocation(m_shader,"useFog"), true);
-        glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 9.0);
-        glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 10.0);
+        glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 10.0);
+        glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 20.0);
 
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
@@ -472,7 +472,7 @@ void Realtime::paintGL() {
                                   0,0,1,0,
                                   m_metaData.cameraData.pos[0], m_metaData.cameraData.pos[1], m_metaData.cameraData.pos[2], 1);
 
-    day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao);
+    day_sky.Render(m_proj*m_view*cam_trans, m_sky_shader, m_skybox_vbo, m_skybox_vao, sun_color);
 
     // Task 25: Bind the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
@@ -679,6 +679,9 @@ void Realtime::sceneChanged() {
     glUseProgram(0);
     glErrorCheck();
 
+    time_of_day = 12.f;
+    setTimeOfDay();
+
     update(); // asks for a PaintGL() call to occur
 }
 
@@ -687,7 +690,7 @@ void Realtime::setTimeOfDay() {
     float sunset = 20.f;
 
     if(time_of_day > sunset || time_of_day < sunrise) { //night
-        m_metaData.lights[0].color = glm::vec4(0);
+        sun_color = glm::vec4(.0, .0, .0, 1);
     } else {
         float day_pcnt = (time_of_day - sunrise)/(sunset - sunrise);
         float angle = glm::radians(180.f * day_pcnt);
@@ -696,11 +699,12 @@ void Realtime::setTimeOfDay() {
 
         float intensity = 1.f - abs(.5f-day_pcnt);
         if(day_pcnt > .85f) { // sunset
-            m_metaData.lights[0].color = glm::vec4(1, .34, .2, 1) * intensity;
+            sun_color = glm::vec4(1, .47, .44, 1) * intensity;
         } else {
-            m_metaData.lights[0].color = glm::vec4(.8, .8, .8, 1) * intensity;
+            sun_color = glm::vec4(1, 1, 1, 1) * intensity;
         }
     }
+    m_metaData.lights[0].color = sun_color;
     updateLights();
 }
 
