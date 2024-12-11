@@ -240,8 +240,8 @@ void Realtime::initializeGL() {
          v, -v, -v,  v, -v,  v,  -v, -v,  v   // Triangle 2
     };
 
-    day_sky = Skybox("resources/right.jpg","resources/left.jpg","resources/top.jpg","resources/bottom.jpg","resources/front.jpg","resources/back.jpg", m_sky_shader, GL_TEXTURE3, skybox_data.size()/3);
-    night_sky = Skybox("resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png", m_sky_shader, GL_TEXTURE4, skybox_data.size()/3);
+    day_sky = Skybox("resources/right.jpg","resources/left.jpg","resources/top.jpg","resources/bottom.jpg","resources/front.jpg","resources/back.jpg", m_sky_shader, GL_TEXTURE1, skybox_data.size()/3);
+    night_sky = Skybox("resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png","resources/night.png", m_sky_shader, GL_TEXTURE2, skybox_data.size()/3);
 
     glGenBuffers(1, &m_skybox_vbo);
     glErrorCheck();
