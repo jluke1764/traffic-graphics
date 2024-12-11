@@ -43,10 +43,13 @@ public:
 
 
 private:
+    float m_scaleFactor = 1; //scale according to rest of scene (block is 1)
+
+
     glm::vec3 m_position = glm::vec3(0.0);
     float m_directionAngle = 0.0;
 
-    float m_speed = 0.1; //position change in one timestep
+    float m_speed = 0.05*m_scaleFactor; //position change in one timestep
     float m_acceleration = 0.0;
 
     float m_wheelbase = 2.5;
@@ -55,6 +58,7 @@ private:
     float m_steeringAngle = 0.0;
     float m_steeringSpeed = glm::radians(1.0f); //max angle change in one timestep
     float m_maxSteeringAngle = glm::radians(45.0f);
+
 
 
 

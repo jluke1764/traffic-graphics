@@ -9,7 +9,9 @@ TrafficScene::TrafficScene() {
 
     SceneColor red = {1, 0, 0, 1};
 
-    glm::vec3 loc1 = glm::vec3(0, 0, 0);
+    // glm::vec3 loc1 = glm::vec3(0, 0, 0);
+
+    glm::vec3 loc1 = block2positionCoordinates(3, 3);
 
     Car* car1 = new Car(red, loc1, 90);
     m_cars.push_back(car1);
@@ -46,4 +48,12 @@ void TrafficScene::update(int time) {
 
 
     }
+}
+
+glm::vec3 TrafficScene::block2positionCoordinates(int row, int col) {
+    //11 rows, 11 cols
+    float xpos = row+0.925;
+    float zpos = col+0.025;
+
+    return glm::vec3(xpos, 0, zpos);
 }

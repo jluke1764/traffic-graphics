@@ -14,6 +14,7 @@ public:
 private:
     std::vector<Car *> m_cars;
     std::vector<RenderShapeData> m_shapes;
+    glm::vec3 block2positionCoordinates(int row, int col);
 };
 
 
