@@ -7,118 +7,30 @@ void Cylinder::updateParams(int param1, int param2) {
     setVertexData();
 }
 
-// makeTile(tL, Tl... normal for each position)
-// makeCap(isTop) // switch insert order based on whether it's the top or bottom
-// length/param
-// edge case for top
-
-
-// void Cylinder::makeSideTile(glm::vec3 topLeft,
-//                       glm::vec3 topRight,
-//                       glm::vec3 bottomLeft,
-//                       glm::vec3 bottomRight) {
-//     insertVec3(m_vertexData, topLeft);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(topLeft.x, 0, topLeft.z)));
-
-//     insertVec3(m_vertexData, bottomLeft);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(bottomLeft.x, 0, bottomLeft.z)));
-
-//     insertVec3(m_vertexData, bottomRight);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(bottomRight.x, 0, bottomRight.z)));
-
-//     insertVec3(m_vertexData, topLeft);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(topLeft.x, 0, topLeft.z)));
-
-//     insertVec3(m_vertexData, bottomRight);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(bottomRight.x, 0, bottomRight.z)));
-
-//     insertVec3(m_vertexData, topRight);
-//     insertVec3(m_vertexData, glm::normalize(glm::vec3(topRight.x, 0, topRight.z)));
-// }
-
-// void Cylinder::makeFaceTile(glm::vec3 topLeft,
-//                             glm::vec3 topRight,
-//                             glm::vec3 bottomLeft,
-//                             glm::vec3 bottomRight,
-//                             bool isTop) {
-//     glm::vec3 normal;
-//     if (isTop) {
-//         normal = glm::vec3(0, 1, 0);
-//     } else if (!isTop) {
-//         normal = glm::vec3(0, -1, 0);
-//     }
-//     insertVec3(m_vertexData, topLeft);
-//     insertVec3(m_vertexData, normal);
-
-//     insertVec3(m_vertexData, bottomLeft);
-//     insertVec3(m_vertexData, normal);
-
-//     insertVec3(m_vertexData, bottomRight);
-//     insertVec3(m_vertexData, normal);
-
-//     insertVec3(m_vertexData, topLeft);
-//     insertVec3(m_vertexData, normal);
-
-//     insertVec3(m_vertexData, bottomRight);
-//     insertVec3(m_vertexData, normal);
-
-//     insertVec3(m_vertexData, topRight);
-//     insertVec3(m_vertexData, normal);
-// }
-
-// void Cylinder::makeWedge(float currentTheta, float nextTheta, bool isTop) {
-//     // Task 6: create a single wedge of the sphere using the
-//     //         makeTile() function you implemented in Task 5
-//     // Note: think about how param 1 comes into play here!
-//     float radius = 0.5f;
-//     float phi_distance = 3.14159 / m_param1;
-
-//     for (int i = 0; i < m_param1; ++i) {
-//         float currentPhi = i*phi_distance;
-//         float nextPhi = (i+1)*phi_distance;
-
-//         glm::vec3 topLeft = radius * glm::vec3(sin(currentPhi) * sin(currentTheta), cos(currentPhi), sin(currentPhi) * cos(currentTheta));
-
-//         glm::vec3 topRight = radius * glm::vec3(sin(currentPhi) * sin(nextTheta), cos(currentPhi), sin(currentPhi) * cos(nextTheta));
-
-//         glm::vec3 bottomLeft = radius * glm::vec3(sin(nextPhi) * sin(currentTheta), cos(nextPhi), sin(nextPhi) * cos(currentTheta));
-
-//         glm::vec3 bottomRight = radius * glm::vec3(sin(nextPhi) * sin(nextTheta), cos(nextPhi), sin(nextPhi) * cos(nextTheta));
-
-//         if
-//         makeTile(topLeft, topRight, bottomLeft, bottomRight);
-//     }
-// }
-
-// void Cylinder::makeCylinder() {
-//     // Task 7: create a full sphere using the makeWedge() function you
-//     //         implemented in Task 6
-//     // Note: think about how param 2 comes into play here!
-//     float theta_distance = 2*3.14159 / m_param2;
-
-//     for (int i = 0; i < m_param2; ++i) {
-//         float currentTheta = i * theta_distance;
-//         float nextTheta = (i + 1) * theta_distance;
-
-//         makeWedge(currentTheta, nextTheta);
-//     }
-// }
-
-// void Cylinder::setVertexData() {
-//     // Uncomment these lines to make a wedge for Task 6, then comment them out for Task 7:
-
-//     float thetaStep = glm::radians(360.f / m_param2);
-//     float currentTheta = 0 * thetaStep;
-//     float nextTheta = 1 * thetaStep;
-//     makeWedge(currentTheta, nextTheta);
-
-//     // Uncomment these lines to make sphere for Task 7:
-
-//     makeCylinder();
-// }
-
-
-
+glm::vec2 Cylinder::getUV(glm::vec3 point) {
+    float u = 0.f;
+    float v = 0.f;
+    float x = point.x;
+    float y = point.y;
+    float z = point.z;
+    if (y==0.5) { //top face
+        u = x+0.5;
+        v = -z+0.5;
+    } else if (y==-0.5) { //bottom face
+        u = x+0.5;
+        v = z+0.5;
+    } else if ((y>-0.5) and (y<0.5)) { //middle
+        float theta = atan2(z,x);
+        // std::cout << "theta: " << theta << std::endl;
+        if (theta < 0) {
+            u = -theta/(2*M_PI);
+        } else if (theta > 0) {
+            u = 1-theta/(2*M_PI);
+        }
+        v = y+0.5;
+    }
+    return glm::vec2(u,v);
+}
 
 
 void Cylinder::makeTile(glm::vec3 topLeft,
@@ -143,63 +55,77 @@ void Cylinder::makeTile(glm::vec3 topLeft,
     if (isSide) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
-
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
-
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
+        insertVec2(m_vertexData, getUV(topRight));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
+        insertVec2(m_vertexData, getUV(bottomRight));
     }
     if (isBottom) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normal);
-
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
-
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(topRight));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(bottomRight));
 
     } else if (isTop) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(bottomLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(topLeft));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(bottomRight));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normal);
+        insertVec2(m_vertexData, getUV(topRight));
     }
 }
 
@@ -252,54 +178,64 @@ void Cylinder::makeCap(bool isTop) {
             glm::vec3 p5 = glm::vec3(distance * cos(nextTheta), y, distance * sin(nextTheta));
             glm::vec3 p6 = glm::vec3(nextDistance * cos(nextTheta), y, nextDistance * sin(nextTheta));
 
+
             if (!isTop) {
                 // Insert first vertex
                 insertVec3(m_vertexData, p1);
                 insertVec3(m_vertexData, normal);
-
+                insertVec2(m_vertexData, getUV(p1));
                 // Insert second vertex
                 insertVec3(m_vertexData, p2);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p2));
 
                 // Insert third vertex
                 insertVec3(m_vertexData, p3);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p3));
 
                 // Insert first vertex
                 insertVec3(m_vertexData, p4);
                 insertVec3(m_vertexData, normal);
-
+                insertVec2(m_vertexData, getUV(p4));
                 // Insert second vertex
                 insertVec3(m_vertexData, p5);
                 insertVec3(m_vertexData, normal);
-
+                insertVec2(m_vertexData, getUV(p5));
                 // Insert third vertex
                 insertVec3(m_vertexData, p6);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p6));
             } else {
                 // Insert first vertex
                 insertVec3(m_vertexData, p1);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p1));
 
                 // Insert third vertex
                 insertVec3(m_vertexData, p3);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p3));
 
                 // Insert second vertex
                 insertVec3(m_vertexData, p2);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p2));
 
                 // Insert first vertex
                 insertVec3(m_vertexData, p4);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p4));
 
                 // Insert third vertex
                 insertVec3(m_vertexData, p6);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p6));
 
                 // Insert second vertex
                 insertVec3(m_vertexData, p5);
                 insertVec3(m_vertexData, normal);
+                insertVec2(m_vertexData, getUV(p5));
             }
         }
     }
@@ -319,4 +255,8 @@ void Cylinder::insertVec3(std::vector<float> &data, glm::vec3 v) {
     data.push_back(v.x);
     data.push_back(v.y);
     data.push_back(v.z);
+}
+void Cylinder::insertVec2(std::vector<float> &data, glm::vec2 v) {
+    data.push_back(v.x);
+    data.push_back(v.y);
 }

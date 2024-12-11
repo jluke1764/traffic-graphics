@@ -14,6 +14,7 @@ public:
 
 private:
     void insertVec3(std::vector<float> &data, glm::vec3 v);
+    void insertVec2(std::vector<float> &data, glm::vec2 v);
     void setVertexData();
     void makeTile(glm::vec3 topLeft,
                   glm::vec3 topRight,
@@ -21,25 +22,10 @@ private:
                   glm::vec3 bottomRight, bool isTop, bool isBottom, bool isSide);
     void makeSide();
     void makeCap(bool isTop);
+    glm::vec2 getUV(glm::vec3 point);
 
     std::vector<float> m_vertexData;
     float m_radius = 0.5;
     int m_param1;
     int m_param2;
-    // void insertVec3(std::vector<float> &data, glm::vec3 v);
-    // void setVertexData();
-    // void makeTile(glm::vec3 topLeft,
-    //               glm::vec3 topRight,
-    //               glm::vec3 bottomLeft,
-    //               glm::vec3 bottomRight,
-    //               bool isTop,
-    //               bool isBottom,
-    //               bool isSide);
-    // void makeSide();
-    // void makeCap(bool isTop);
-
-    // std::vector<float> m_vertexData;
-    // int m_param1;
-    // int m_param2;
-    // float m_radius = 0.5;
 };
