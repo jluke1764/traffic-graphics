@@ -21,6 +21,8 @@
 #include "shapes/sphere.h"
 #include "shapes/cylinder.h"
 
+#include "skybox.h"
+
 
 class Realtime : public QOpenGLWidget
 {
@@ -60,6 +62,7 @@ private:
     void tesselateShapes();
     void updateLights();
     void tileCity();
+    void setTimeOfDay();
 
     struct Light {
         int type;
@@ -91,6 +94,7 @@ private:
     TrafficScene m_trafficScene;
     GLuint m_texture_shader;
     GLuint m_shader;     // Stores id of shader program
+    GLuint m_sky_shader;
     std::vector<GLuint> m_vaos; // Stores id of vao
     std::vector<GLuint> m_vbos;
 
@@ -110,6 +114,9 @@ private:
 
     GLuint m_fullscreen_vbo;
     GLuint m_fullscreen_vao;
+
+    GLuint m_skybox_vbo;
+    GLuint m_skybox_vao;
 
     std::vector<std::vector<float>> shapeData;
 
@@ -132,6 +139,12 @@ private:
 
     float param1 = settings.shapeParameter1;
     float param2 = settings.shapeParameter2;
-    float near = settings.nearPlane;
-    float far = settings.farPlane;
+    float _near = settings.nearPlane;
+    float _far = settings.farPlane;
+    float time_of_day = settings.sun;
+
+    Skybox day_sky;
+    Skybox night_sky;
+    glm::vec4 sun_color;
+    bool is_night;
 };
