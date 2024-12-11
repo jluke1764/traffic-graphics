@@ -97,7 +97,7 @@ private:
     std::vector<GLuint> m_vbos;
 
     GLuint m_fbo_texture;
-    std::vector<GLuint> m_kitten_textures = std::vector<GLuint>(100);
+    std::vector<GLuint> m_kitten_textures = std::vector<GLuint>(2000);
     GLuint m_fbo_renderbuffer;
     GLuint m_fbo;
     GLuint m_defaultFBO;

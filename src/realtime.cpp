@@ -431,7 +431,7 @@ void Realtime::paintGeometry() {
             glErrorCheck();
 
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE3+i);
+            glActiveTexture(GL_TEXTURE3);
             glErrorCheck();
 
             glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
@@ -786,6 +786,9 @@ void Realtime::tileCity() {
     RenderShapeData whiteColumnData;
     bool whiteColumnFound = false;
 
+    whiteColumnData.primitive.material.textureMap.clear();
+    whiteColumnData.primitive.material.blend = 0.5f;
+
     // Get white column primitive, ignore ctm from the file
     for (auto &s : blockData.shapes) {
         bool isWhite =
@@ -805,8 +808,15 @@ void Realtime::tileCity() {
                                   fabs(scaleApprox.z - 0.3f) < 0.05f);
 
         if (isWhite && scaleMatchesWhite && !whiteColumnFound) {
-            // Copy only the primitive and material data, not the ctm
+            // Copy only the primitive and material data, not the ctm]
             whiteColumnData.primitive = s.primitive;
+            std::filesystem::path basepath = std::filesystem::path("scenefiles/action/extra_credit/textures/bark.png");
+            // whiteColumnData.primitive.material.textureMap.filename = (basepath / fileRelativePath).string();
+            whiteColumnData.primitive.material.textureMap.filename = (basepath).string();
+            std::cout << whiteColumnData.primitive.material.textureMap.filename << std::endl;
+            whiteColumnData.primitive.material.textureMap.repeatU = 1;
+            whiteColumnData.primitive.material.textureMap.repeatV = 1;
+            whiteColumnData.primitive.material.textureMap.isUsed = true;
             whiteColumnFound = true;
         } else {
             baseBlockShapes.push_back(s);
@@ -1014,6 +1024,7 @@ void Realtime::tileCity() {
             }
         }
     }
+    renderBuildings();
 }
 
 void Realtime::renderBuildings() {
@@ -1024,12 +1035,15 @@ void Realtime::renderBuildings() {
         RenderShapeData &shape = m_metaData.shapes[i];
 
         if (shape.primitive.material.textureMap.isUsed) {
+            std::cout << "here" << std::endl;
 
             // Prepare filepath
             QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
+            std::cout << shape.primitive.material.textureMap.filename << std::endl;
 
             // Task 1: Obtain image from filepath
             m_image = QImage(texture_filepath);
+            if (m_image.isNull()) std::cout << "Bad filepath" <<std::endl;
 
             // Task 2: Format image to fit OpenGL
             m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
@@ -1040,7 +1054,7 @@ void Realtime::renderBuildings() {
             glErrorCheck();
 
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE3+i);
+            glActiveTexture(GL_TEXTURE3);
             glErrorCheck();
 
             // Task 4: Bind kitten texture

@@ -9,7 +9,7 @@ struct Settings {
     int shapeParameter2 = 1;
     float nearPlane = 1;
     float farPlane = 1;
-    float sun = 1;
+    float sun = 12;
     float traffic = 1;
     bool perPixelFilter = false;
     bool kernelBasedFilter = false;
