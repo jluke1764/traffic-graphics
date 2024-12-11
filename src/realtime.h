@@ -129,6 +129,6 @@ private:
 
     float param1 = settings.shapeParameter1;
     float param2 = settings.shapeParameter2;
-    float near = settings.nearPlane;
-    float far = settings.farPlane;
+    float _near = settings.nearPlane;
+    float _far = settings.farPlane;
 };

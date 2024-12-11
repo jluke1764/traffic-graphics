@@ -942,7 +942,7 @@ void Realtime::sceneChanged() {
     SceneParser::parse(settings.sceneFilePath, m_metaData);
     glErrorCheck();
 
-    // tileCity();
+    tileCity();
 
     Realtime::updateLights();
     glErrorCheck();
@@ -1021,14 +1021,14 @@ void Realtime::settingsChanged() {
     if (param1 != settings.shapeParameter1 || param2 != settings.shapeParameter2) {
         tesselateShapes();
     }
-    if (near != settings.nearPlane || far != settings.farPlane) {
+    if (_near != settings.nearPlane || _far != settings.farPlane) {
         Camera camera(m_metaData.cameraData, size().width(), size().height());
         m_proj = camera.getProjectionMatrix();
     }
     param1 = settings.shapeParameter1;
     param2 = settings.shapeParameter2;
-    near = settings.nearPlane;
-    far = settings.farPlane;
+    _near = settings.nearPlane;
+    _far = settings.farPlane;
 
     update(); // asks for a PaintGL() call to occur
 }
