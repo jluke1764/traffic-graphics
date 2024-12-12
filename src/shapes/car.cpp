@@ -16,7 +16,7 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     m_position = startingPosition;
     m_directionAngle = glm::radians(startingDirectionAngle);
 
-    SceneMaterial bodyMaterial = SceneMaterial{.cAmbient = {1*color.r, 1*color.g, 1*color.b, 1},
+    SceneMaterial bodyMaterial = SceneMaterial{.cAmbient = {0.3*color.r, 0.3*color.g, 0.3*color.b, 1},
                                            .cDiffuse = {0.7*color.r, 0.7*color.g, 0.7*color.b, 1},
                                            .cSpecular = {1.0, 1.0, 1.0, 1},
                                            .shininess = 15.0};
@@ -241,7 +241,7 @@ void Car::setDesiredPosition(glm::vec3 desiredPos) {
 void Car::goOneBlock() {
     glm::vec3 dir = glm::normalize(glm::vec3(cos(m_directionAngle), 0, sin(m_directionAngle)));
 
-    glm::vec3 desiredPosition = getPosition() + dir;
+    glm::vec3 desiredPosition = getPosition() + m_speed*dir;
     setDesiredPosition(desiredPosition);
 
     std::cout << "go one block desired pos: " << m_desiredPosition.x << ", " << m_desiredPosition.y << ", " << m_desiredPosition.z << std::endl;

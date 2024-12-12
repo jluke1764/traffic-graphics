@@ -7,22 +7,35 @@ TrafficScene::TrafficScene() {
     std::cout << "created traffic scene" << std::endl;
     m_cars.clear();
 
+    int num_cars = 50;
+
+    for (int i = 0; i < num_cars; i++) {
+
+        SceneColor color = {rand()%100*0.1, rand()%90*0.1, rand()%90*0.1, 1};
+
+
+        glm::vec3 loc = block2positionCoordinates(rand()%10-5, rand()%10-5);
+        Car* car1 = new Car(color, loc, 0);
+        m_cars.push_back(car1);
+        std::cout << "car " << i << std::endl;
+    }
+
     SceneColor red = {1, 0, 0, 1};
 
-    glm::vec3 loc1 = glm::vec3(4.5, 0, 3);
+    // // glm::vec3 loc1 = glm::vec3(4.5, 0, 3);
 
     // glm::vec3 loc1 = block2positionCoordinates(0, 0);
-    Car* car1 = new Car(red, loc1, 0);
-    m_cars.push_back(car1);
-    std::cout << "car1" << std::endl;
+    // Car* car1 = new Car(red, loc1, 0);
+    // m_cars.push_back(car1);
+    // std::cout << "car1" << std::endl;
 
 
-    glm::vec3 loc2 = glm::vec3(3, 0, 3.5);
-    SceneColor blue = {0, 0, 1, 1};
-    Car* car2 = new Car(blue, loc2, 90);
-    m_cars.push_back(car2);
+    // glm::vec3 loc2 = glm::vec3(3, 0, 3.5);
+    // SceneColor blue = {0, 0, 1, 1};
+    // Car* car2 = new Car(blue, block2positionCoordinates(1, 1), 90);
+    // m_cars.push_back(car2);
 
-    std::cout << "car2" << std::endl;
+    // std::cout << "car2" << std::endl;
 
 
     // glm::vec3 loc3 = glm::vec3(3, 0, 3.5);
@@ -70,6 +83,7 @@ void TrafficScene::update(int time) {
             car->goOneBlock();
         }
 
+        car->goOneBlock();
 
         car->update(time);
 
@@ -79,7 +93,7 @@ void TrafficScene::update(int time) {
 
 glm::vec3 TrafficScene::block2positionCoordinates(int row, int col) {
     //11 rows, 11 cols
-    float xpos = row+0.925+0.5;
+    float xpos = row+0.925+0.5+0.03;
     float zpos = col+0.025+0.5;
 
     return glm::vec3(xpos, 0, zpos);
