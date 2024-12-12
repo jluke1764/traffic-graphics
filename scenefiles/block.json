@@ -44,7 +44,7 @@
           "primitives": [
             {
               "type": "cube",
-              "ambient": [0.0, 0.6, 0.09],
+              "ambient": [0.0, 0.55, 0.04],
               "diffuse": [0.0, 0.6, 0.09], 
               "blend": 0.5,
               "textureFile": "textures/grass.jpg",
