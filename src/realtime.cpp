@@ -1347,7 +1347,7 @@ void Realtime::timerEvent(QTimerEvent *event) {
         updateViewMatrix();
     }
     if (m_keyMap[Qt::Key_Space]) {
-        m_metaData.cameraData.pos += glm::vec4(0,1,0,0)*(5.f*deltaTime);
+        // m_metaData.cameraData.pos += glm::vec4(0,1,0,0)*(5.f*deltaTime);
         // updateViewMatrix();
     }
     if (m_keyMap[Qt::Key_Control]) {

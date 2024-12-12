@@ -9,15 +9,15 @@ TrafficScene::TrafficScene() {
 
     SceneColor red = {1, 0, 0, 1};
 
-    // glm::vec3 loc1 = glm::vec3(0, 0, 0);
+    glm::vec3 loc1 = glm::vec3(4.5, 0, 3);
 
-    glm::vec3 loc1 = block2positionCoordinates(0, 0);
-    Car* car1 = new Car(red, loc1, 90);
+    // glm::vec3 loc1 = block2positionCoordinates(0, 0);
+    Car* car1 = new Car(red, loc1, 0);
     m_cars.push_back(car1);
     std::cout << "car1" << std::endl;
 
 
-    glm::vec3 loc2 = glm::vec3(3, 0, 3);
+    glm::vec3 loc2 = glm::vec3(3, 0, 3.5);
     SceneColor blue = {0, 0, 1, 1};
     Car* car2 = new Car(blue, loc2, 90);
     m_cars.push_back(car2);
@@ -25,25 +25,26 @@ TrafficScene::TrafficScene() {
     std::cout << "car2" << std::endl;
 
 
+    // glm::vec3 loc3 = glm::vec3(3, 0, 3.5);
 
-    Car* car3 = new Car(blue, block2positionCoordinates(1, 1), 90);
-    m_cars.push_back(car3);
+    // Car* car3 = new Car({0, 1.0, 0, 1}, loc3, 90);
+    // m_cars.push_back(car3);
 
-    std::cout << "car3" << std::endl;
-
-
-
-    Car* car4 = new Car(red, block2positionCoordinates(2, 1), 90);
-    m_cars.push_back(car4);
-
-    std::cout << "car4" << std::endl;
+    // std::cout << "car3" << std::endl;
 
 
 
-    Car* car5 = new Car(red, block2positionCoordinates(3, 1), 90);
-    m_cars.push_back(car5);
+    // Car* car4 = new Car(red, {), 90);
+    // m_cars.push_back(car4);
 
-    std::cout << "car5" << std::endl;
+    // std::cout << "car4" << std::endl;
+
+
+
+    // Car* car5 = new Car(red, block2positionCoordinates(3, 1), 90);
+    // m_cars.push_back(car5);
+
+    // std::cout << "car5" << std::endl;
 
 
 
@@ -66,8 +67,9 @@ void TrafficScene::update(int time) {
     for (Car* car : m_cars) {
 
         if (time == 1) {
-            car->setDesiredPosition(car->getPosition() + glm::vec3(7, 0, 7));
+            car->goOneBlock();
         }
+
 
         car->update(time);
 
@@ -77,8 +79,8 @@ void TrafficScene::update(int time) {
 
 glm::vec3 TrafficScene::block2positionCoordinates(int row, int col) {
     //11 rows, 11 cols
-    float xpos = row+0.925;
-    float zpos = col+0.025;
+    float xpos = row+0.925+0.5;
+    float zpos = col+0.025+0.5;
 
     return glm::vec3(xpos, 0, zpos);
 }

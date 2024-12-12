@@ -19,6 +19,7 @@ public:
     void goForward();
     void turnRight();
     void setVelocity(float v);
+    void goOneBlock();
     void drive(float steeringAngle, float speed);
 
 
@@ -49,7 +50,7 @@ private:
     glm::vec3 m_position = glm::vec3(0.0);
     float m_directionAngle = 0.0;
 
-    float m_speed = 1*m_scaleFactor; //position change in one timestep
+    float m_speed = 0.01; //position change in one timestep
     float m_acceleration = 0.0;
 
     float m_wheelbase = 2.5;
@@ -80,6 +81,7 @@ private:
     glm::mat4 m_rotateWheelRight;
 
     glm::vec3 m_desiredPosition = glm::vec3(0.0);
+    float m_desiredAngle;
 
 
 

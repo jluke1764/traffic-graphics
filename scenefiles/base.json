@@ -7,7 +7,7 @@
     "transparentCoeff": 0
   },
   "cameraData": {
-    "position": [0, 1.0, 4.0],
+    "position": [0, 1.5, 4.0],
     "up": [0.0, 1.0, 0.0],
     "focus": [0, 0, 0],
     "heightAngle": 30.0

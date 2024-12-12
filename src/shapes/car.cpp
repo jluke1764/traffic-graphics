@@ -172,7 +172,8 @@ glm::vec3 Car::getPosition() {
 //this controls what the car will do at a given timestep
 void Car::update(int time) {
 
-    float posError = 1; //must have error
+    std::cout << "updating car" << std::endl;
+    float posError = 0.1; //must have error
     float dirError = .5;
 
     //restore angles to proper ranges
@@ -197,7 +198,9 @@ void Car::update(int time) {
 
         //calculate angle between the current angle and the angle
 
-        float desiredAngle = atan(togo.y/togo.x);
+        float desiredAngle = -atan(togo.y/togo.x);
+        std::cout << "angle togo: " << glm::degrees(desiredAngle) << std::endl;
+
         float angleDiff = desiredAngle - m_directionAngle;
 
         //if the angle currently facing is not the desired angle towards the setpoint
@@ -230,9 +233,19 @@ void Car::setDesiredPosition(glm::vec3 desiredPos) {
 
 }
 
-// void Car::driveRightCorner() {
-//     //until car is facing 90 degrees to the right from its starting direction, steer the car 30 degrees to the right
+// void Car::setDesiredAngle(float desiredAngleDegrees) {
+//     m_desiredAngle = desiredPos;
 
 // }
+
+void Car::goOneBlock() {
+    glm::vec3 dir = glm::normalize(glm::vec3(cos(m_directionAngle), 0, sin(m_directionAngle)));
+
+    glm::vec3 desiredPosition = getPosition() + dir;
+    setDesiredPosition(desiredPosition);
+
+    std::cout << "go one block desired pos: " << m_desiredPosition.x << ", " << m_desiredPosition.y << ", " << m_desiredPosition.z << std::endl;
+
+}
 
 
