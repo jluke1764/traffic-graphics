@@ -20,6 +20,8 @@ public:
     void turnRight();
     void setVelocity(float v);
     void goOneBlock();
+    void rightCorner();
+
     void drive(float steeringAngle, float speed);
 
 

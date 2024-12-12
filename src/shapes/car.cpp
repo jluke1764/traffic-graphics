@@ -260,11 +260,15 @@ void Car::setDesiredPosition(glm::vec3 desiredPos) {
 void Car::goOneBlock() {
     glm::vec3 dir = glm::normalize(glm::vec3(cos(m_directionAngle), 0, sin(m_directionAngle)));
 
-    glm::vec3 desiredPosition = getPosition() + m_speed*dir;
+    glm::vec3 desiredPosition = getPosition() + dir;
     setDesiredPosition(desiredPosition);
 
     std::cout << "go one block desired pos: " << m_desiredPosition.x << ", " << m_desiredPosition.y << ", " << m_desiredPosition.z << std::endl;
 
+}
+
+void Car::rightCorner() {
+    glm::vec3 desiredPosition = getPosition() + glm::vec3(0.5, 0, 0.5);
 }
 
 

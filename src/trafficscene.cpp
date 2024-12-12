@@ -15,8 +15,16 @@ TrafficScene::TrafficScene() {
 
 
         glm::vec3 loc = block2positionCoordinates(rand()%10-5, rand()%10-5);
-        Car* car1 = new Car(color, loc, 0);
-        m_cars.push_back(car1);
+
+        if (rand()%2) {
+            Car* car1 = new Car(color, loc, 0);
+            m_cars.push_back(car1);
+
+        } else {
+            Car* car1 = new Car(color, loc, 90);
+            m_cars.push_back(car1);
+
+        }
         std::cout << "car " << i << std::endl;
     }
 
@@ -24,10 +32,10 @@ TrafficScene::TrafficScene() {
 
     // // glm::vec3 loc1 = glm::vec3(4.5, 0, 3);
 
-    // glm::vec3 loc1 = block2positionCoordinates(0, 0);
-    // Car* car1 = new Car(red, loc1, 0);
-    // m_cars.push_back(car1);
-    // std::cout << "car1" << std::endl;
+    glm::vec3 loc1 = block2positionCoordinates(0, 0);
+    Car* car1 = new Car(red, loc1, 0);
+    m_cars.push_back(car1);
+    std::cout << "car1" << std::endl;
 
 
     // glm::vec3 loc2 = glm::vec3(3, 0, 3.5);
@@ -84,6 +92,10 @@ void TrafficScene::update(int time) {
         }
 
         car->goOneBlock();
+
+        if (time%3) {
+            car->rightCorner();
+        }
 
         car->update(time);
 
