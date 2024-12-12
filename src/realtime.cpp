@@ -420,7 +420,7 @@ void Realtime::paintGeometry() {
         glUniform1f(glGetUniformLocation(m_shader,"shininess"),shape.primitive.material.shininess);
         glErrorCheck();
 
-        glUniform1i(glGetUniformLocation(m_shader,"useFog"), false); //JL
+        glUniform1i(glGetUniformLocation(m_shader,"useFog"), true); //JL
         glUniform1f(glGetUniformLocation(m_shader,"fogStart"), 10.0);
         glUniform1f(glGetUniformLocation(m_shader,"fogEnd"), 20.0);
 
@@ -1366,9 +1366,9 @@ void Realtime::timerEvent(QTimerEvent *event) {
         m_metaData.cameraData.pos += glm::vec4(glm::cross(glm::normalize(glm::vec3(m_metaData.cameraData.look)), glm::normalize(glm::vec3(m_metaData.cameraData.up))),0)*5.f*deltaTime;
         updateViewMatrix();
     }
-    if (m_keyMap[Qt::Key_Space]) {
-        // m_metaData.cameraData.pos += glm::vec4(0,1,0,0)*(5.f*deltaTime);
-        // updateViewMatrix();
+    if (m_keyMap[Qt::Key_Shift]) {
+        m_metaData.cameraData.pos += glm::vec4(0,1,0,0)*(5.f*deltaTime);
+        updateViewMatrix();
     }
     if (m_keyMap[Qt::Key_Control]) {
         m_metaData.cameraData.pos += glm::vec4(0,-1,0,0)*(5.f*deltaTime);
