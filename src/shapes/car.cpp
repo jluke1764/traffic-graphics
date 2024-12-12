@@ -24,12 +24,26 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
     ScenePrimitive body = ScenePrimitive{.type = PrimitiveType::PRIMITIVE_CUBE,
                                               .material = bodyMaterial};
 
+    SceneMaterial cabinMaterial = SceneMaterial{.cAmbient = {0.8*color.r, 0.8*color.g, 0.8*color.b, 1},
+                                                .cDiffuse = {0.5*color.r, 0.5*color.g, 0.5*color.b, 1},
+                                                .cSpecular = {1.0, 1.0, 1.0, 1},
+                                                .shininess = 20.0};
+
+    ScenePrimitive cabin = ScenePrimitive{.type = PrimitiveType::PRIMITIVE_CUBE,
+                                          .material = cabinMaterial};
+
     //car space
     m_scaleBody = glm::scale(glm::mat4(1.0), {2.0, 1, 4.0});
     m_translateBody = glm::translate(glm::mat4(1.0), {0, 0.5, 0});
 
+    m_scaleCabin = glm::scale(glm::mat4(1.0), {1.6, 0.8, 2.0}); // Slightly smaller than body
+    m_translateCabin = glm::translate(glm::mat4(1.0), {0, 1.4, -0.3});
+
     m_body = RenderShapeData{.primitive = body,
                              .ctm = m_translateBody*m_scaleBody*glm::mat4(1.0)};
+
+    m_cabin = RenderShapeData{.primitive = cabin,
+                              .ctm = m_translateCabin*m_scaleCabin*glm::mat4(1.0)};
 
     SceneMaterial wheelMaterial = SceneMaterial{.cAmbient = {0.0, 0.0, 0.0, 1},
                                                .cDiffuse = {0.1, 0.1, 0.1, 1},
@@ -91,6 +105,7 @@ std::vector<RenderShapeData> Car::getShapeData() {
     // printMatrix4x4(m_body.ctm);
 
     ret.push_back(RenderShapeData{.primitive = m_body.primitive, .ctm = carCTM*m_body.ctm});
+    ret.push_back(RenderShapeData{.primitive = m_cabin.primitive, .ctm = carCTM*m_cabin.ctm});
 
     //wheels
     ret.push_back(RenderShapeData{.primitive = m_wheelFL.primitive, .ctm = carCTM*m_wheelFL.ctm});
