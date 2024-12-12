@@ -38,6 +38,10 @@ Car::Car(glm::vec4 color, glm::vec3 startingPosition, float startingDirectionAng
 
     ScenePrimitive wheel = ScenePrimitive{.type = PrimitiveType::PRIMITIVE_CYLINDER,
                                           .material = wheelMaterial};
+    wheel.material.textureMap.isUsed = true;
+    wheel.material.textureMap.filename = "wheel.png";
+    wheel.material.blend = 1.f;
+    wheel.material.textureMap.tex = 7;
 
     m_scaleWheel = glm::scale(glm::mat4(1.0), {0.7, 0.25, 0.7});
 
