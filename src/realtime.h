@@ -45,6 +45,7 @@ protected:
     void paintTexture();
     void paintGL() override;          // Called whenever the OpenGL context changes or by an update() request
     void resizeGL(int width, int height) override;      // Called when window size changes
+    void renderBuildings();
 
 private:
     void keyPressEvent(QKeyEvent *event) override;

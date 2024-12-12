@@ -44,6 +44,42 @@ void Cube::makeTile(glm::vec3 topLeft,
     insertVec3(m_vertexData, normal2);
     insertVec2(m_vertexData, glm::vec2(u1,v1));
 }
+void Cube::makeTopTile(glm::vec3 topLeft,
+                    glm::vec3 topRight,
+                    glm::vec3 bottomLeft,
+                    glm::vec3 bottomRight,
+                    int i, int j) {
+    // Task 2: create a tile (i.e. 2 triangles) based on 4 given points.
+    glm::vec3 normal1 = glm::normalize(glm::cross(bottomLeft-topLeft, bottomRight-topLeft));
+    glm::vec3 normal2 = glm::normalize(glm::cross(bottomRight-topLeft, topRight-topLeft));
+
+    float u = 0.f;
+    float v = 0.f;
+
+    insertVec3(m_vertexData, topLeft);
+    insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+
+    insertVec3(m_vertexData, bottomLeft);
+    insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+
+    insertVec3(m_vertexData, bottomRight);
+    insertVec3(m_vertexData, normal1);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+
+    insertVec3(m_vertexData, topLeft);
+    insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+
+    insertVec3(m_vertexData, bottomRight);
+    insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+
+    insertVec3(m_vertexData, topRight);
+    insertVec3(m_vertexData, normal2);
+    insertVec2(m_vertexData, glm::vec2(u,v));
+}
 
 
 
@@ -68,6 +104,31 @@ void Cube::makeFace(glm::vec3 topLeft,
             glm::vec3 BR = BL + x_distance;
 
             makeTile(TL, TR, BL, BR, i, j);
+        }
+    }
+}
+
+void Cube::makeTopFace(glm::vec3 topLeft,
+                    glm::vec3 topRight,
+                    glm::vec3 bottomLeft,
+                    glm::vec3 bottomRight) {
+    // Task 3: create a single side of the cube out of the 4
+    //         given points and makeTile()
+    // Note: think about how param 1 affects the number of triangles on
+    //       the face of the cube
+    // num_triangles = 2*pow(m_param1, 2);
+    glm::vec3 x_distance = (topRight - topLeft) / static_cast<float>(m_param1);
+    glm::vec3 y_distance = (bottomLeft - topLeft) / static_cast<float>(m_param1);
+
+    // Loop over the grid of tiles
+    for (float i = 0; i < m_param1; ++i) {
+        for (float j = 0; j < m_param1; ++j) {
+            glm::vec3 TL = topLeft + x_distance*i + y_distance*j;
+            glm::vec3 TR = TL + x_distance;
+            glm::vec3 BL = TL + y_distance;
+            glm::vec3 BR = BL + x_distance;
+
+            makeTopTile(TL, TR, BL, BR, i, j);
         }
     }
 }
@@ -108,7 +169,7 @@ void Cube::setVertexData() {
              glm::vec3( 0.5f, -0.5f, -0.5f));
 
     //top face
-    makeFace(glm::vec3(-0.5f,  0.5f, -0.5f),
+    makeTopFace(glm::vec3(-0.5f,  0.5f, -0.5f),
              glm::vec3( 0.5f,  0.5f, -0.5f),
              glm::vec3(-0.5f,  0.5f,  0.5f),
              glm::vec3( 0.5f,  0.5f,  0.5f));

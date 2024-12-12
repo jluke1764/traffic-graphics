@@ -427,6 +427,7 @@ void Realtime::paintGeometry() {
         glUniform1i(glGetUniformLocation(m_shader, "has_texture"), shape.primitive.material.textureMap.isUsed);
         glErrorCheck();
 
+
         int shapeIndex = m_sphereIndex;
         if (shape.primitive.type == PrimitiveType::PRIMITIVE_SPHERE) {
             shapeIndex = m_sphereIndex;
@@ -443,11 +444,13 @@ void Realtime::paintGeometry() {
             glUniform1f(glGetUniformLocation(m_shader, "blend"), shape.primitive.material.blend);
             glErrorCheck();
 
+            int j = shape.primitive.material.textureMap.tex;
+
             // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE3+i);
+            glActiveTexture(GL_TEXTURE3+j);
             glErrorCheck();
 
-            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
+            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[j]);
             glErrorCheck();
 
             // Task 6: Set min and mag filters' interpolation mode to linear
@@ -456,9 +459,10 @@ void Realtime::paintGeometry() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glErrorCheck();
 
+
             glUseProgram(m_shader);
             glErrorCheck();
-            glUniform1i(glGetUniformLocation(m_shader, "tex"), 3+i);
+            glUniform1i(glGetUniformLocation(m_shader, "tex"), 3+j);
             glErrorCheck();
         }
 
@@ -875,6 +879,9 @@ void Realtime::tileCity() {
             // Copy only the primitive and material data, not the ctm
             whiteColumnData.primitive = s.primitive;
             whiteColumnFound = true;
+            whiteColumnData.primitive.material.textureMap.isUsed = true;
+            whiteColumnData.primitive.material.textureMap.tex = rand() % 5;
+            whiteColumnData.primitive.material.blend = 1;
         } else {
             baseBlockShapes.push_back(s);
         }
@@ -974,6 +981,9 @@ void Realtime::tileCity() {
                 empireBuilding.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
                 empireBuilding.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
                 empireBuilding.primitive.material.shininess = 10.f;
+                empireBuilding.primitive.material.textureMap.isUsed = true;
+                empireBuilding.primitive.material.textureMap.tex = rand() % 5;
+                empireBuilding.primitive.material.blend = 1;
 
                 glm::mat4 empireTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
                                             * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
@@ -1041,6 +1051,9 @@ void Realtime::tileCity() {
                         building.primitive.material.cDiffuse = glm::vec4(r, g, b, 1.f);
                         building.primitive.material.cSpecular = glm::vec4(0.5f,0.5f,0.5f,1.f);
                         building.primitive.material.shininess = 10.f;
+                        building.primitive.material.textureMap.isUsed = true;
+                        building.primitive.material.textureMap.tex = rand() % 5;
+                        building.primitive.material.blend = 1;
 
                         glm::mat4 buildingTransform = glm::translate(glm::vec3(worldX, buildingHeight/2.0f, worldZ))
                                                       * glm::scale(glm::vec3(buildingWidth, buildingHeight, buildingWidth));
@@ -1083,6 +1096,55 @@ void Realtime::tileCity() {
     }
 }
 
+void Realtime::renderBuildings() {
+    std::vector<std::string> files = {
+        "textures/facade_windows.jpg",
+        "textures/texture_brick.jpg",
+        "textures/texture_geometric.jpg",
+        "textures/texture_windows.jpg",
+        "textures/grey_brick.jpg",
+        "textures/grass.jpg",
+        "textures/grass2.png"
+    };
+    for (int i = 0;i<files.size();++i) {
+        // Prepare filepath
+        QString texture_filepath = QString::fromStdString(files[i]);
+
+        // Task 1: Obtain image from filepath
+        m_image = QImage(texture_filepath);
+        if (m_image.isNull()) std::cout << "Bad filepath" <<std::endl;
+
+        // Task 2: Format image to fit OpenGL
+        m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+
+        // Task 3: Generate kitten texture
+        glGenTextures(1, &m_kitten_textures[i]);
+        glErrorCheck();
+
+        // Task 9: Set the active texture slot to texture slot 1
+        glActiveTexture(GL_TEXTURE3+i);
+        glErrorCheck();
+
+        // Task 4: Bind kitten texture
+        glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
+        glErrorCheck();
+
+        // Task 5: Load image into kitten texture
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
+        glErrorCheck();
+
+        // Task 7: Unbind kitten texture
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glErrorCheck();
+
+        glUseProgram(0);
+        glErrorCheck();
+    }
+}
+
+
 void Realtime::sceneChanged() {
     makeCurrent();
     SceneParser::parse(settings.sceneFilePath, m_metaData);
@@ -1116,51 +1178,8 @@ void Realtime::sceneChanged() {
     glErrorCheck();
 
     setTimeOfDay();
-  
-    int num_shapes = m_metaData.shapes.size();
 
-    for (int i=0; i<num_shapes; ++i){
-
-        RenderShapeData &shape = m_metaData.shapes[i];
-
-        if (shape.primitive.material.textureMap.isUsed) {
-
-            // Prepare filepath
-            QString texture_filepath = QString::fromStdString(shape.primitive.material.textureMap.filename);
-
-            // Task 1: Obtain image from filepath
-            m_image = QImage(texture_filepath);
-
-            // Task 2: Format image to fit OpenGL
-            m_image = m_image.convertToFormat(QImage::Format_RGBA8888).mirrored();
-
-
-            // Task 3: Generate kitten texture
-            glGenTextures(1, &m_kitten_textures[i]);
-            glErrorCheck();
-
-            // Task 9: Set the active texture slot to texture slot 1
-            glActiveTexture(GL_TEXTURE3+i);
-            glErrorCheck();
-
-            // Task 4: Bind kitten texture
-            glBindTexture(GL_TEXTURE_2D, m_kitten_textures[i]);
-            glErrorCheck();
-
-            // Task 5: Load image into kitten texture
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_image.width(), m_image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image.bits());
-            glErrorCheck();
-
-            // Task 7: Unbind kitten texture
-
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glErrorCheck();
-
-            glUseProgram(0);
-            glErrorCheck();
-
-        }
-    }
+    renderBuildings();
 
     update(); // asks for a PaintGL() call to occur
 }
