@@ -38,13 +38,19 @@
           ]
         },
         {
+          "rotate": [1.0, 0.0, 0.0, 180],
           "translate": [0.0, 0.0101, 0.0],
           "scale": [0.8, 0.005, 0.8],
           "primitives": [
             {
               "type": "cube",
               "ambient": [0.0, 0.6, 0.09],
-              "diffuse": [0.0, 0.6, 0.09]
+              "diffuse": [0.0, 0.6, 0.09], 
+              "blend": 0.5,
+              "textureFile": "textures/grass.jpg",
+              "tex": 6,
+              "textureU": 4.0,
+              "textureV": 4.0
             }
           ]
         },

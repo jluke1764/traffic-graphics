@@ -1032,10 +1032,12 @@ void Realtime::tileCity() {
 void Realtime::renderBuildings() {
     std::vector<std::string> files = {
         "textures/facade_windows.jpg",
-        "textures/modern.jpg",
         "textures/texture_brick.jpg",
         "textures/texture_geometric.jpg",
-        "textures/texture_windows.jpg"
+        "textures/texture_windows.jpg",
+        "textures/grey_brick.jpg",
+        "textures/grass.jpg",
+        "textures/grass2.png"
     };
     for (int i = 0;i<files.size();++i) {
         // Prepare filepath
