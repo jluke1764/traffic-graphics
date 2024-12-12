@@ -1104,7 +1104,8 @@ void Realtime::renderBuildings() {
         "textures/texture_windows.jpg",
         "textures/grey_brick.jpg",
         "textures/grass.jpg",
-        "textures/grass2.png"
+        "textures/grass2.png",
+        "textures/wheel.png"
     };
     for (int i = 0;i<files.size();++i) {
         // Prepare filepath

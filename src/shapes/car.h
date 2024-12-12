@@ -65,8 +65,11 @@ private:
 
     // glm::mat4 m_ctm;
     RenderShapeData m_body;
+    RenderShapeData m_cabin;
     glm::mat4 m_translateBody;
     glm::mat4 m_scaleBody;
+    glm::mat4 m_translateCabin;
+    glm::mat4 m_scaleCabin;
 
     RenderShapeData m_wheelFL;
     glm::mat4 m_translateFL;

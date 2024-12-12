@@ -55,27 +55,27 @@ void Cylinder::makeTile(glm::vec3 topLeft,
     if (isSide) {
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
-        insertVec2(m_vertexData, getUV(topLeft));
+        insertVec2(m_vertexData, glm::vec2(0,0));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
-        insertVec2(m_vertexData, getUV(bottomRight));
+        insertVec2(m_vertexData, glm::vec2(0,0));
 
         insertVec3(m_vertexData, bottomLeft);
         insertVec3(m_vertexData, normalBL);
-        insertVec2(m_vertexData, getUV(bottomLeft));
+        insertVec2(m_vertexData, glm::vec2(0,0));
 
         insertVec3(m_vertexData, topLeft);
         insertVec3(m_vertexData, normalTL);
-        insertVec2(m_vertexData, getUV(topLeft));
+        insertVec2(m_vertexData, glm::vec2(0,0));
 
         insertVec3(m_vertexData, topRight);
         insertVec3(m_vertexData, normalTR);
-        insertVec2(m_vertexData, getUV(topRight));
+        insertVec2(m_vertexData, glm::vec2(0,0));
 
         insertVec3(m_vertexData, bottomRight);
         insertVec3(m_vertexData, normalBR);
-        insertVec2(m_vertexData, getUV(bottomRight));
+        insertVec2(m_vertexData, glm::vec2(0,0));
     }
     if (isBottom) {
         insertVec3(m_vertexData, topLeft);
